@@ -1,3 +1,4 @@
 nozomu.sty
 icons/*.png
+!icons/exclamation.png
 .DS_Store
