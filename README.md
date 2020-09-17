@@ -31,8 +31,6 @@ All of these packages are contained in TeX Live.
 nylecnote needs the following images.  
 Please download the png from the following link and rename them.
 
-- [Exclamation mark](https://icooon-mono.com/11478-%E3%81%B3%E3%81%A3%E3%81%8F%E3%82%8A%E3%83%9E%E3%83%BC%E3%82%AF/)
-  : rename it to `exclamation.png`
 - [Lightbulb](https://www.silhouette-illust.com/illust/23161)
   : rename it to `lightbulb.png`
 - [Pencil](https://www.silhouette-illust.com/illust/14517)
@@ -43,3 +41,13 @@ Please download the png from the following link and rename them.
   : rename it to `eighth_note.png`
 
 Put the files you downloaded in the `icons` folder.
+
+#### change_color.py
+
+In the `icons` folder, you can find `change_color.py`.  
+Running this python file will convert the color of your images.
+
+```
+cd icons/
+python3 change_color.py
+```
