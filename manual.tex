@@ -1,0 +1,508 @@
+\documentclass[dvipdfmx,uplatex,b5j,8pt,nomag*]{jsarticle}
+\usepackage{nylecnote}
+\usepackage{lipsum, multicol,jlisting,bxjalipsum}
+\title{{\tt nylecnote}}
+\subtitle{マニュアル}
+\author{nozomu-y}
+
+\parindent = 0pt
+\def\nycolors{nyRed,nyPink,nyPurple,nyBlue,nyIndigo,nyLightBlue,nyCyan,nyTeal,nyGreen,nyLightGreen,nyLime,nyYellow,nyAmber,nyOrange,nyDeepOrange}
+\def\bootstrapcol{primary,secondary,info,success,warning,danger,light,dark}
+
+\titleformat{name=\section,numberless}
+{}{}{0pt}
+{\secTitle{#1}{}}
+\titleformat{name=\subsection,numberless}
+{}{}{0pt}
+{\subsecTitle{#1}{}}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{プリアンブル}
+\begin{lstlisting}
+\documentclass[dvipdfmx,uplatex,nomag*]{jsarticle}
+\usepackage[<options>]{nylecnote}
+\end{lstlisting}
+
+パッケージのオプションには，{\tt onecolumn, twocolumn, noheader, part}を指定できます．
+\begin{description}
+    \item[{\tt onecolumn}] 何も指定しない場合のデフォルトです．
+        {\tt twocolumn}との両立はできません．
+    \item[{\tt twocolumn}] {\tt documentclass}のオプションに{\tt twocolumn}を指定する代わりに{\tt nylecnote}のオプションにして下さい．
+        {\tt onecolumn}との両立はできません．
+    \item[{\tt noheader}] 各ページのヘッダーを表示しないようにします．
+    \item[{\tt part}] ヘッダーにパート名を表示します．
+\end{description}
+
+\section{見出し}
+
+\begin{multicols}{2}
+\section*{Section}
+\subsection*{Subsection}
+\subsubsection*{Subsubsection}
+\paragraph*{Paragraph}\mbox{}\\
+
+\columnbreak
+
+\begin{lstlisting}
+\section*{Section}
+\subsection*{Subsection}
+\subsubsection*{Subsubsection}
+\paragraph*{Paragraph}
+\end{lstlisting}
+
+\end{multicols}
+
+
+
+\newpage
+\section{証明・定理環境}
+
+\begin{multicols}{2}
+\begin{proof}
+    Write your proof here. 
+\end{proof}
+
+\columnbreak
+
+\begin{lstlisting}
+\begin{proof}
+    Write your proof here. 
+\end{proof}
+\end{lstlisting}
+\end{multicols}
+
+\begin{multicols}{2}
+\begin{solution}
+    Write your solution here. 
+\end{solution}
+
+\columnbreak
+
+\begin{lstlisting}
+\begin{solution}
+    Write your solution here. 
+\end{solution}
+\end{lstlisting}
+\end{multicols}
+
+\begin{multicols}{2}
+\begin{theorem}[Name of theorem (optional)]
+    Your theorem here.
+\end{theorem}
+
+\columnbreak
+
+\begin{lstlisting}
+\begin{theorem}[Name of theorem (optional)]
+    Your theorem here.
+\end{theorem}
+\end{lstlisting}
+    
+\end{multicols}
+
+
+\begin{multicols}{2}
+\begin{definition}[Name of definition (optional)]
+    Your definition here.
+\end{definition}
+
+\columnbreak
+
+\begin{lstlisting}
+\begin{definition}[Name of definition (optional)]
+    Your definition here.
+\end{definition}
+\end{lstlisting}
+
+\end{multicols}
+
+\begin{multicols}{2}
+\begin{lemma}[Name of lemma (optional)]
+    Your lemma here.
+\end{lemma}
+
+\columnbreak
+
+\begin{lstlisting}
+\begin{lemma}[Name of lemma (optional)]
+    Your lemma here.
+\end{lemma}
+\end{lstlisting}
+    
+\end{multicols}
+
+
+\begin{multicols}{2}
+\begin{hypo}[Name of hypo (optional)]
+    Your hypo here.
+\end{hypo}
+
+\columnbreak
+
+\begin{lstlisting}
+\begin{hypo}[Name of hypo (optional)]
+    Your hypo here.
+\end{hypo}
+\end{lstlisting}
+    
+\end{multicols}
+
+
+\begin{multicols}{2}
+\begin{example}[Name of example (optional)]
+    Your example here.
+\end{example}
+
+\columnbreak
+
+\begin{lstlisting}
+\begin{example}[Name of example (optional)]
+    Your example here.
+\end{example}
+\end{lstlisting}
+    
+\end{multicols}
+    
+
+アスタリスクをつけることでナンバリングを外すことも可能です．
+\begin{multicols}{2}
+\begin{theorem*}[Name of theorem (optional)]
+    Your theorem here.
+\end{theorem*}
+
+\columnbreak
+
+\begin{lstlisting}
+\begin{theorem*}[Name of theorem (optional)]
+    Your theorem here.
+\end{theorem*}
+\end{lstlisting}
+    
+\end{multicols}
+
+
+\newpage
+\section{色}
+\foreach \nycolor in \nycolors{%
+\colorsample{\nycolor}
+}
+\newpage
+\foreach \nycolor in \bootstrapcol{%
+\colorsample{\nycolor}
+}
+
+
+
+\section{ハイライト}
+
+\begin{multicols}{2}
+    \newcommand{\highlighttest}[1]{\highlight[#1]{#1}}
+    \foreach \nycolor in \nycolors{%
+        \highlighttest{\nycolor}
+    }
+    \columnbreak
+\begin{lstlisting}
+\highlight[<color>]{<text>}
+\end{lstlisting}
+\end{multicols}
+
+\begin{lstlisting}
+\begin{align*}
+    f(\mathbf{w}, b) =
+        \highlightcap[nyRed]{\displaystyle \sum_{i=1}^k \left(y_i - \mathbf{w}^\top \mathbf{x}_i - b \right)^2}{経験誤差}
+        +
+        \highlightcap[nyBlue]{\displaystyle \frac{\lambda}{2} \left\|\mathbf{w} \right\|^2}{正則化項}
+\end{align*}
+\end{lstlisting}
+
+\begin{align*}
+    f(\mathbf{w}, b) =
+        \highlightcap[nyRed]{\displaystyle \sum_{i=1}^k \left(y_i - \mathbf{w}^\top \mathbf{x}_i - b \right)^2}{経験誤差}
+        +
+        \highlightcap[nyBlue]{\displaystyle \frac{\lambda}{2} \left\|\mathbf{w} \right\|^2}{正則化項}
+\end{align*}
+
+
+\newpage
+
+\section{枠囲み}
+
+\begin{multicols}{2}
+\begin{nyCheck}{ポイント}
+    \jalipsum[3]{preamble}
+\end{nyCheck}
+\columnbreak
+\begin{lstlisting}
+\begin{nyCheck}{<title>}[<options>]
+    <content>
+\end{nyCheck}
+\end{lstlisting}
+\end{multicols}
+
+\begin{multicols}{2}
+\begin{nyAttention}{試験に出る}
+    \jalipsum[3]{preamble}
+\end{nyAttention}
+\columnbreak
+\begin{lstlisting}
+\begin{nyAttention}{<title>}[<options>]
+    <content>
+\end{nyAttention}
+\end{lstlisting}
+\end{multicols}
+
+\begin{multicols}{2}
+\begin{nyHint}{ヒント}
+    \jalipsum[3]{preamble}
+\end{nyHint}
+\columnbreak
+\begin{lstlisting}
+\begin{nyHint}{<title>}[<options>]
+    <content>
+\end{nyHint}
+\end{lstlisting}
+\end{multicols}
+
+\begin{multicols}{2}
+\begin{nyMemo}{メモ}
+    \jalipsum[3]{preamble}
+\end{nyMemo}
+\columnbreak
+\begin{lstlisting}
+\begin{nyMemo}{<title>}[<options>]
+    <content>
+\end{nyMemo}
+\end{lstlisting}
+\end{multicols}
+
+\begin{multicols}{2}
+\begin{nyClip}{参考}
+    \jalipsum[3]{preamble}
+\end{nyClip}
+\columnbreak
+\begin{lstlisting}
+\begin{nyClip}{<title>}[<options>]
+    <content>
+\end{nyClip}
+\end{lstlisting}
+\end{multicols}
+
+\begin{multicols}{2}
+\begin{nyTreble}{タイトル}
+    \jalipsum[3]{preamble}
+\end{nyTreble}
+\columnbreak
+\begin{lstlisting}
+\begin{nyTreble}{<title>}[<options>]
+    <content>
+\end{nyTreble}
+\end{lstlisting}
+\end{multicols}
+
+\begin{multicols}{2}
+\begin{nyEighthNote}{タイトル}
+    \jalipsum[3]{preamble}
+\end{nyEighthNote}
+\columnbreak
+\begin{lstlisting}
+\begin{nyEighthNote}{<title>}[<options>]
+    <content>
+\end{nyEighthNote}
+\end{lstlisting}
+\end{multicols}
+
+\begin{multicols}{2}
+\begin{nyGridbox}{吾輩は猫である}
+    \jalipsum[1]{wagahai}
+\end{nyGridbox}
+\columnbreak
+\begin{lstlisting}
+\begin{nyGridbox}{<title>}[<options>]
+    <content>
+\end{nyGridbox}
+\end{lstlisting}
+\end{multicols}
+
+\begin{multicols}{2}
+\nyMemoFill{メモ}
+\columnbreak
+\begin{lstlisting}
+\nyMemoFill{<title>}
+\end{lstlisting}
+ページ下部まで自動的に高さを調整します．
+\end{multicols}
+
+\newpage
+
+\begin{multicols}{2}
+\begin{attention}{タイトル}
+    \jalipsum[3]{preamble}
+\end{attention}
+\columnbreak
+\begin{lstlisting}
+\begin{attention}{<title>}[<options>]
+    <content>
+\end{attention}
+\end{lstlisting}
+\end{multicols}
+
+\begin{multicols}{2}
+\begin{subsection1}{タイトル}
+    \jalipsum[3]{preamble}
+\end{subsection1}
+\columnbreak
+\begin{lstlisting}
+\begin{subsection1}{<title>}[<options>]
+    <content>
+\end{subsection1}
+\end{lstlisting}
+\end{multicols}
+
+\begin{multicols}{2}
+\begin{subsection2}{タイトル}
+    \jalipsum[3]{preamble}
+\end{subsection2}
+\columnbreak
+\begin{lstlisting}
+\begin{subsection2}{<title>}[<thickness>][<options>]
+    <content>
+\end{subsection2}
+\end{lstlisting}
+\end{multicols}
+
+\begin{multicols}{2}
+\begin{supplement1}{タイトル}
+    \jalipsum[3]{preamble}
+\end{supplement1}
+\columnbreak
+\begin{lstlisting}
+\begin{supplement1}{<title>}[<thickness>][<options>]
+    <content>
+\end{supplement1}
+\end{lstlisting}
+\end{multicols}
+
+\begin{multicols}{2}
+    \begin{supplement2}{タイトル}[サブタイトル]
+    \jalipsum[3]{preamble}
+\end{supplement2}
+\columnbreak
+\begin{lstlisting}
+\begin{supplement2}{<title>}[<subtitle>][<thickness>][<options>]
+    <content>
+\end{supplement2}
+\end{lstlisting}
+\end{multicols}
+
+\newpage
+\begin{multicols}{2}
+\begin{mySection1}{1}{タイトル}
+    \jalipsum[3]{preamble}
+    \tcbline
+    \jalipsum[3]{preamble}
+\end{mySection1}
+\columnbreak
+\begin{lstlisting}
+\begin{mySection1}{<num>}{<title>}
+    <content>
+    \tcbline
+    <content>
+\end{mySection1}
+\end{lstlisting}
+\end{multicols}
+
+\begin{multicols}{2}
+\begin{mySection2}{1}{タイトル}
+    \jalipsum[3]{preamble}
+    \tcblower
+    \jalipsum[3]{preamble}
+\end{mySection2}
+\columnbreak
+\begin{lstlisting}
+\begin{mySection2}{<num>}{<title>}
+    <content>
+    \tcblower
+    <content>
+\end{mySection2}
+\end{lstlisting}
+\end{multicols}
+
+
+
+\newpage
+\begin{multicols}{2}
+\begin{alert}{primary}
+A simple primary alert—check it out!
+\end{alert}
+\begin{alert}{secondary}
+A simple secondary alert—check it out!
+\end{alert}
+\begin{alert}{success}
+A simple success alert—check it out!
+\end{alert}
+\begin{alert}{info}
+A simple info alert—check it out!
+\end{alert}
+\begin{alert}{warning}
+A simple warning alert—check it out!
+\end{alert}
+\begin{alert}{danger}
+A simple danger alert—check it out!
+\tcblower
+You can draw a line!
+\end{alert}
+\columnbreak
+\begin{lstlisting}
+\begin{alert}{primary}
+    A simple primary alert—check it out!
+\end{alert}
+\begin{alert}{secondary}
+    A simple secondary alert—check it out!
+\end{alert}
+\begin{alert}{success}
+    A simple success alert—check it out!
+\end{alert}
+\begin{alert}{info}
+    A simple info alert—check it out!
+\end{alert}
+\begin{alert}{warning}
+    A simple warning alert—check it out!
+\end{alert}
+\begin{alert}{danger}
+    A simple danger alert—check it out!
+    \tcblower
+    You can draw a line!
+\end{alert}
+\end{lstlisting}
+\end{multicols}
+
+
+
+\begin{multicols}{2}
+\begin{card}{Card}
+Some quick example text to build on the card title and make up the bulk of the card's content.
+\end{card}
+\columnbreak
+\begin{lstlisting}
+\begin{card}{Card}
+    Some quick example text to build on the card title and make up the bulk of the card's content.
+\end{card}
+\end{lstlisting}
+\end{multicols}
+
+\begin{multicols}{2}
+\myTag{タグ}
+\columnbreak
+\begin{lstlisting}
+\myTag{タグ}
+\end{lstlisting}
+\end{multicols}
+
+
+
+
+\end{document}
