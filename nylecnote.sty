@@ -1,0 +1,833 @@
+\NeedsTeXFormat{pLaTeX2e}
+\ProvidesPackage{nylecnote}[2020/9/16, Version 1.0]
+\RequirePackage{tcolorbox}
+\RequirePackage[explicit]{titlesec}
+\RequirePackage{titletoc}
+\RequirePackage{xcolor-material}
+\RequirePackage{hyperref,pxjahyper}
+\RequirePackage{tikz,tikzscale,tikzpagenodes,varwidth}
+\RequirePackage{atbegshi}
+\RequirePackage{listings}
+\RequirePackage{amsmath,amssymb,amsthm,mathtools}
+\RequirePackage{graphicx}
+\usetikzlibrary{calc,shapes,shadows,positioning}
+
+
+% package options
+\newif\if@twocol\@twocolfalse
+\newif\if@header\@headertrue
+\newif\if@part\@partfalse
+
+\DeclareOption{twocolumn}{\@twocoltrue}
+\DeclareOption{onecolumn}{\@twocolfalse}
+\DeclareOption{noheader}{\@headerfalse}
+\DeclareOption{part}{\@parttrue}
+\ProcessOptions
+
+\if@twocol
+\twocolumn
+\else
+\onecolumn
+\fi
+
+\if@header
+\RequirePackage[top=30truemm,bottom=15truemm,left=15truemm,right=15truemm]{geometry}
+\else
+  \if@twocol
+  \RequirePackage[top=20truemm,bottom=20truemm,left=15truemm,right=15truemm]{geometry}
+  \else
+  \RequirePackage[top=20truemm,bottom=20truemm,left=20truemm,right=20truemm]{geometry}
+  \fi
+\fi
+
+\if@part
+\makeatletter
+\@addtoreset{section}{part}
+\makeatother
+\renewcommand{\thepart}{\arabic{part}}
+\renewcommand*\thesection{\thepart.\arabic{section}}
+\renewcommand*\thesubsection{\thesection.\arabic{subsection}}
+\fi
+
+\newcommand{\parttitle}{}
+
+\makeatletter
+\pretocmd{\@part}{\gdef\parttitle{#1}}{}{}
+\pretocmd{\@spart}{\gdef\parttitle{#1}}{}{}
+\makeatother
+
+
+% Color Definition
+% Color based on bootstrap
+\definecolor{primary}{HTML}{2C3E50}
+\definecolor{secondary}{HTML}{95a5a6}
+\definecolor{success}{HTML}{18BC9C}
+\definecolor{info}{HTML}{3498DB}
+\definecolor{warning}{HTML}{F39C12}
+\definecolor{danger}{HTML}{E74C3C}
+\definecolor{light}{HTML}{ecf0f1}
+\definecolor{dark}{HTML}{7b8a8b}
+
+% Color based on material design
+\colorlet{nyRed}{MaterialRed600}
+\colorlet{nyPink}{MaterialPink600}
+\colorlet{nyPurple}{MaterialPurple600}
+\colorlet{nyBlue}{MaterialBlue600}
+\colorlet{nyIndigo}{MaterialIndigo600}
+\colorlet{nyCyan}{MaterialCyan600}
+\colorlet{nyLightBlue}{MaterialLightBlue600}
+\colorlet{nyGreen}{MaterialGreen600}
+\colorlet{nyLightGreen}{MaterialLightGreen600}
+\colorlet{nyTeal}{MaterialTeal600}
+\colorlet{nyLime}{MaterialLime600}
+\colorlet{nyYellow}{MaterialYellow600}
+\colorlet{nyAmber}{MaterialAmber600}
+\colorlet{nyOrange}{MaterialOrange600}
+\colorlet{nyDeepOrange}{MaterialDeepOrange600}
+
+\makeatletter
+% Settings for hyperref
+\hypersetup{
+    setpagesize=false,
+    bookmarksnumbered=true,
+    bookmarksopen=true,
+    colorlinks=true,
+    linkcolor=nyIndigo!90!black,
+    citecolor=nyIndigo!90!black,
+    filecolor=nyIndigo!90!black,
+    urlcolor=nyIndigo!90!black,
+    pdftitle={\@title},
+    pdfauthor={\@author}
+}
+\makeatother
+
+\makeatletter
+% put the cite number on the upper right
+\def\@cite#1#2{$^{\mbox{\tiny[{#1\if@tempswa , #2\fi}]}}$}
+% extend the footnoterule to page width
+\renewcommand{\footnoterule}{\kern-3\p@\hrule width 1\columnwidth\kern 2.6\p@}
+\makeatother
+
+\renewcommand{\emph}[1]{\textsf{\textgt{#1}}}
+\setlength{\columnseprule}{1pt}
+
+
+
+% Header Design
+\makeatletter
+\if@part
+\newcommand\HeaderLeft{%
+    \begin{tikzpicture}[remember picture,overlay]%
+        \draw[ultra thick] ($(current page text area.north west)+(0,24pt)$) -- ($(current page text area.north east)+(0,24pt)$);
+        \draw[ultra thick] ($(current page text area.north west)+(24pt,48pt)$) -- ($(current page text area.north west)+(24pt,18pt)$);
+        \draw[ultra thick,opacity=.3] ($(current page text area.north west)+(28pt,46pt)$) -- ($(current page text area.north west)+(28pt,14pt)$);
+        \node at ($(current page text area.north west)+(32pt,32pt)$) [right] {\fontsize{10pt}{0pt}\selectfont{\@title\hspace{1em}\@subtitle}};
+        \node at ($(current page text area.north west)+(12pt,32pt)$) {\fontsize{10pt}{0pt}\selectfont{\thepage}};
+    \end{tikzpicture}}%
+\newcommand\HeaderRight{%
+    \begin{tikzpicture}[remember picture,overlay]%
+        \draw[ultra thick] ($(current page text area.north west)+(0,24pt)$) -- ($(current page text area.north east)+(0,24pt)$);
+        \draw[ultra thick] ($(current page text area.north east)+(-24pt,48pt)$) -- ($(current page text area.north east)+(-24pt,18pt)$);
+        \draw[ultra thick,opacity=.3] ($(current page text area.north east)+(-28pt,46pt)$) -- ($(current page text area.north east)+(-28pt,14pt)$);
+        \node at ($(current page text area.north east)+(-32pt,32pt)$) [left] {\fontsize{10pt}{0pt}\selectfont{\prepartname\thepart\postpartname\hspace{1em}\parttitle}};
+        \node at ($(current page text area.north east)+(-12pt,32pt)$) {\fontsize{10pt}{0pt}\selectfont{\thepage}};
+    \end{tikzpicture}}%
+\else
+\newcommand\HeaderLeft{%
+    \begin{tikzpicture}[remember picture,overlay]%
+        \draw[ultra thick] ($(current page text area.north west)+(0,24pt)$) -- ($(current page text area.north east)+(0,24pt)$);
+        \draw[ultra thick] ($(current page text area.north west)+(24pt,48pt)$) -- ($(current page text area.north west)+(24pt,18pt)$);
+        \draw[ultra thick,opacity=.3] ($(current page text area.north west)+(28pt,46pt)$) -- ($(current page text area.north west)+(28pt,14pt)$);
+        \node at ($(current page text area.north west)+(32pt,32pt)$) [right] {\fontsize{10pt}{0pt}\selectfont{\@title}};
+        \node at ($(current page text area.north west)+(12pt,32pt)$) {\fontsize{10pt}{0pt}\selectfont{\thepage}};
+    \end{tikzpicture}}%
+\newcommand\HeaderRight{%
+    \begin{tikzpicture}[remember picture,overlay]%
+        \draw[ultra thick] ($(current page text area.north west)+(0,24pt)$) -- ($(current page text area.north east)+(0,24pt)$);
+        \draw[ultra thick] ($(current page text area.north east)+(-24pt,48pt)$) -- ($(current page text area.north east)+(-24pt,18pt)$);
+        \draw[ultra thick,opacity=.3] ($(current page text area.north east)+(-28pt,46pt)$) -- ($(current page text area.north east)+(-28pt,14pt)$);
+        \node at ($(current page text area.north east)+(-32pt,32pt)$) [left] {\fontsize{10pt}{0pt}\selectfont{\@subtitle}};
+        \node at ($(current page text area.north east)+(-12pt,32pt)$) {\fontsize{10pt}{0pt}\selectfont{\thepage}};
+    \end{tikzpicture}}%
+\fi
+\makeatother
+
+\pagestyle{empty}
+\newcommand\Footer{%
+    \begin{tikzpicture}[remember picture,overlay]%
+        \node at ($(current page text area.south)+(0,-2em)$) {\fontsize{10pt}{0pt}\selectfont{\thepage}};
+    \end{tikzpicture}}
+
+\makeatletter
+\if@header
+\AtBeginShipout{%
+    \AtBeginShipoutAddToBox{%
+        \ifodd\thepage\HeaderLeft
+        \else\HeaderRight
+        \fi
+    }
+}
+\else
+\AtBeginShipout{%
+  \AtBeginShipoutAddToBox{%
+  \Footer
+  }
+}
+\fi
+\makeatother
+
+% Declare subtitle
+\makeatletter
+\newif\ifsubtitleempty
+\def\subtitle#1{\gdef\@subtitle{#1}}
+\let\@subtitle\@empty
+\makeatother
+
+
+% title design
+\makeatletter
+\if@header
+\renewcommand{\maketitle}{%
+    \begin{titlepage}%
+        \begin{tikzpicture}[remember picture, overlay]
+            \fill[white] (current page.north west) rectangle (current page.south east);
+            \draw[black!50!white, thick] ([yshift=-.4\paperheight]current page.north west) -- ([yshift=-.4\paperheight]current page.north east);
+            \fill[white] (current page.north east) -- ([xshift=-.75\paperwidth]current page.north east) -- ([yshift=-\paperwidth]current page.north east) -- (current page.north east);
+            \fill[black, opacity=.25] (current page.south east) -- ([xshift=-.8\paperwidth]current page.south east) -- ([yshift=.6\paperwidth]current page.south east)  -- (current page.south east);
+            \fill[black, opacity=.5] (current page.north east) -- ([xshift=-.75\paperwidth]current page.north east) -- ([yshift=-\paperwidth]current page.north east) -- (current page.north east);
+            \fill[black, opacity=.35] (current page.north west) -- ([xshift=.4\paperwidth]current page.north west) -- ([yshift=-.3\paperwidth]current page.north west) -- (current page.north west);
+            \node at ([xshift=.075\paperwidth, yshift=-.4\paperheight+16pt]current page.north west) [right] {\fontsize{24pt}{0pt}\selectfont{\@title}};
+            \node at ([xshift=.6\paperwidth, yshift=-.4\paperheight-12pt]current page.north west) [left] {\fontsize{12pt}{0pt}\selectfont{\@subtitle}};
+            \node at ([yshift=.1\paperheight+24pt, xshift=-.1\paperwidth]current page.south east) [left] {\fontsize{10pt}{0pt}\selectfont{\@date}};
+            \node at ([yshift=.1\paperheight, xshift=-.1\paperwidth]current page.south east) [left] {\fontsize{12pt}{0pt}\selectfont{\@author}};
+        \end{tikzpicture}%
+    \end{titlepage}%
+    \setcounter{page}{1}}
+\else
+\renewcommand{\maketitle}{\par
+    \begingroup
+      \renewcommand\thefootnote{\@fnsymbol\c@footnote}%
+      \def\@makefnmark{\rlap{\@textsuperscript{\normalfont\@thefnmark}}}%
+      \long\def\@makefntext##1{\advance\leftskip 3zw
+        \parindent 1zw\noindent
+        \llap{\@textsuperscript{\normalfont\@thefnmark}\hskip0.3zw}##1}%
+      \if@twocolumn
+        \ifnum \col@number=\@ne
+          \@maketitle
+        \else
+          \twocolumn[\@maketitle]%
+        \fi
+      \else
+        \newpage
+        \global\@topnum\z@  % Prevents figures from going at top of page.
+        \@maketitle
+      \fi
+      \plainifnotempty
+      \@thanks
+    \endgroup
+    \setcounter{footnote}{0}%
+    \global\let\thanks\relax
+    \global\let\maketitle\relax
+    \global\let\@thanks\@empty
+    \global\let\@author\@empty
+    \global\let\@date\@empty
+    \global\let\@title\@empty
+    \global\let\title\relax
+    \global\let\author\relax
+    \global\let\date\relax
+    \global\let\and\relax
+  }
+  \def\@maketitle{%
+    \newpage\null
+    % \vskip 2em
+    \begin{center}%
+      \let\footnote\thanks
+      {\LARGE \UDDigi{m}{\@title} \par}%
+      {\Large \UDDigi{m}{\@subtitle} \par}%
+      \vskip 1.5em
+      {\large
+        \lineskip .5em
+        \begin{tabular}[t]{c}%
+          \@author
+        \end{tabular}\par}%
+      \vskip 1em
+      {\large \@date}%
+    \end{center}%
+    \par\vskip 1.5em
+    \ifvoid\@abstractbox\else\centerline{\box\@abstractbox}\vskip1.5em\fi
+  }
+\fi
+
+\renewcommand{\paragraph}{\@startsection{paragraph}{4}{\z@}%
+    {\z@}{\if@slide .4\Cvs \else -1zw\fi}
+    {\normalfont\normalsize\jsParagraphMark\headfont}}
+    \renewcommand{\jsParagraphMark}{▶︎}
+    \makeatother
+
+\makeatother
+
+%Definition of sectio style
+\makeatletter
+\newcommand{\tocsection}{%
+    \@startsection{section}{1}{\z@}%
+    {0.6\Cvs}{0.4\Cvs}%
+    {\normalfont\large\headfont\raggedright}}
+\makeatother
+
+\newcommand\secTitle[2]{%
+\begin{tikzpicture}
+    \node (A) [rectangle,minimum width=\linewidth,minimum height=2em,text width=\linewidth-3em,align=left] {\Large\headfont{\hspace{0em}{#2}{#1}}};
+    \filldraw[draw=black!75!white,fill=black,fill opacity=.05,semithick] ($(A.north west)+(0,.25em)$) rectangle ($(A.south east)+(0,-.25em)$);
+    \filldraw[black!75!white] ($(A.north west)+(0,.25em)$) rectangle ($(A.south west)+(.5em,-.25em)$);
+\end{tikzpicture}}
+\newcommand\subsecTitle[2]{%
+\begin{tikzpicture}
+    \node (A) [rectangle,minimum height=1.75em,align=left] {%
+    \begin{varwidth}{\linewidth-1em}
+        \large\headfont{\hspace{1.75em}{#2}{#1}}
+    \end{varwidth}
+    };
+    \draw[thick,black!75!white] (A.north west) rectangle ($(A.north west)+(1.25em,-1.25em)$);
+    \draw[thick,black!50!white] ($(A.north west)+(.3em,-.3em)$) rectangle ($(A.north west)+(1.55em,-1.55em)$);
+    \draw[semithick,black!50!white] ($(A.south west)+(0,-.3em)$) -- ($(A.south east)+(0,-.3em)$);
+\end{tikzpicture}}
+\newcommand\subsubsecTitle[2]{%
+\begin{tikzpicture}
+    \node (A) [rectangle,minimum height=1.75em,align=left] {%
+    \begin{varwidth}{\linewidth-1em}
+        \normalsize\headfont{\hspace{1.75em}{#2}{#1}}
+    \end{varwidth}
+    };
+    \draw[thick, black!40!white,rotate=25] ($(A.north west)+(0em,-1.3em)$) rectangle +(.8em,.8em);
+    \draw[thick, black!75!white,rotate=15] ($(A.north west)+(0em,-1.6em)$) rectangle +(.6em,.6em);
+    \draw[semithick,black!50!white,dashed] ($(A.south west)+(0,-.1em)$) -- ($(A.south east)+(0,-.1em)$);
+\end{tikzpicture}}
+
+
+\titleformat{\section}
+{}{}{0pt}
+{\secTitle{#1}{\thesection\hspace{1zw}}}
+
+\titleformat{name=\section,numberless}
+{}{}{0pt}
+{\secTitle{#1}{}\addcontentsline{toc}{section}{#1}}
+
+\titleformat{\subsection}
+{}{}{0pt}
+{\subsecTitle{#1}{\thesubsection\hspace{1zw}}}
+
+\titleformat{name=\subsection,numberless}
+{}{}{0pt}
+{\subsecTitle{#1}{}\addcontentsline{toc}{subsection}{#1}}
+
+\titleformat{\subsubsection}
+{}{}{0pt}
+{\subsubsecTitle{#1}{\thesubsubsection\hspace{1zw}}}
+
+\titleformat{name=\subsubsection,numberless}
+{}{}{0pt}
+{\subsubsecTitle{#1}{}\addcontentsline{toc}{subsubsection}{#1}}
+
+\makeatletter
+\renewcommand{\tableofcontents}{%
+  \settowidth\jsc@tocl@width{\headfont\presectionname\postsectionname}%
+  \settowidth\@tempdima{\headfont\appendixname}%
+  \ifdim\jsc@tocl@width<\@tempdima\relax\setlength\jsc@tocl@width{\@tempdima}\fi
+  \ifdim\jsc@tocl@width<2zw \divide\jsc@tocl@width by 2 \advance\jsc@tocl@width 1zw\fi
+  \tocsection*{\contentsname}
+  \@mkboth{\contentsname}{\contentsname}%
+  \@starttoc{toc}%
+}
+\makeatother
+
+
+% titletoc
+\titlecontents{section}[1zw]{\vspace{1zh}\headfont\large}{\thecontentslabel\hspace{1zw}}{\hspace{0zw}}{\hfill\contentspage}
+\titlecontents{subsection}[3zw]{\vspace{.15zh}\headfont}{\thecontentslabel\hspace{1zw}}{\hspace{0zw}}{\hspace{1zw}\dotfill\contentspage}
+\titlecontents{subsubsection}[5zw]{\vspace{.1zh}\headfont\small}{\thecontentslabel\hspace{1zw}}{\hspace{0zw}}{}
+
+% proof environment
+\makeatletter
+\renewenvironment{proof}[1][\proofname]{\par
+    \pushQED{\qed}%
+    \normalfont \topsep6\p@\@plus6\p@\relax
+    \trivlist
+    \item[\hskip\labelsep
+            \itshape
+            {\bf\underline{#1}}]\ignorespaces \mbox{}\par
+    }{%
+    \popQED\endtrivlist\@endpefalse
+}
+\makeatother
+\renewcommand\proofname{\headfont{証明}}
+\newenvironment{solution}{\begin{proof}[解答]}{\end{proof}}
+
+% highlights
+\newcommand{\highlight}[2][yellow]{\tikz[baseline=(x.base)]{\node[rectangle,rounded corners,fill=#1!10](x){#2};}}
+\newcommand{\highlightcap}[3][yellow]{%
+    \tikz[baseline=(x.base)]{%
+        \node[rectangle,rounded corners,fill=#1!10](x){$#2$};
+        \node[below,color=#1] at (x.south) {#3}; 
+    }
+}
+\newcommand{\highlightcup}[3][yellow]{%
+    \tikz[baseline=(x.base)]{%
+        \node[rectangle,rounded corners,fill=#1!10](x){$#2$};
+        \node[above,color=#1] at (x.north) {#3}; 
+    }
+}
+
+
+% numberings
+\makeatletter
+	\renewcommand{\theequation}{% 式番号の付け方
+	\thesection.\arabic{equation}}
+	\@addtoreset{equation}{section}
+
+	\renewcommand{\thefigure}{% 図番号の付け方
+	\thesection.\arabic{figure}}
+	\@addtoreset{figure}{section}
+
+	\renewcommand{\thetable}{% 表番号の付け方
+	\thesection.\arabic{table}}
+    \@addtoreset{table}{section}
+    
+    \AtBeginDocument{% リスト番号の付け方
+	\renewcommand*{\thelstlisting}{\arabic{section}.\arabic{lstlisting}}%
+	\@addtoreset{lstlisting}{section}}
+\makeatother
+
+\definecolor{editorLightGray}{cmyk}{0.05, 0.05, 0.05, 0.1}
+\definecolor{editorGray}{cmyk}{0.6, 0.55, 0.55, 0.2}
+\definecolor{editorPurple}{cmyk}{0.5, 1, 0, 0}
+\definecolor{editorWhite}{cmyk}{0, 0, 0, 0}
+\definecolor{editorBlack}{cmyk}{1, 1, 1, 1}
+\definecolor{editorOrange}{cmyk}{0, 0.8, 1, 0}
+\definecolor{editorBlue}{cmyk}{1, 0.6, 0, 0}
+\definecolor{editorPink}{cmyk}{0, 1, 0, 0}
+
+\lstset{
+    basicstyle={\small},
+    backgroundcolor=\color{white},%背景色
+    basicstyle=\footnotesize,%標準書体
+    % basicstyle=\ttfamily\footnotesize,%標準書体
+    % commentstyle=\normalfont\color{gray},
+    % stringstyle=\color{green},%文字列リテラルの書体
+    % keywordstyle=\color{cyan},
+    % identifierstyle=\color{editorOrange},
+    identifierstyle=\color{black},
+    % keywordstyle=[1]\color{editorPink},
+    keywordstyle=[1]\color{editorBlue},
+    keywordstyle=[2]\color{editorBlue},
+    keywordstyle=[3]\color{editorBlack},
+    keywordstyle=[4]\color{editorBlue},
+    commentstyle=\color{editorGray},
+    stringstyle=\color{editorPurple},
+    %keywordstyle=\bfseries,
+    frame=tblr,%フレームの設定
+    frameround=ffff,%フレーム角の形状
+    framesep=5pt,%本文からframeまでの間隔
+    xleftmargin=3zw,
+    showstringspaces=false,
+    numbers=left,%プログラムソースの行番号の位置
+    stepnumber=1,%stepnumberで設定した値おきに行番号が表示されます
+    numberstyle=\scriptsize,%行番号の文字サイズ
+    %numbersep={},%行番号と本文との間隔（デフォルトは10pt)
+    breaklines=false,%文が行の最後まで行ったとき改行するかしないかの設定(デフォルトはfalse)
+    %breakindent={},%改行時のインデント量（デフォルトは20pt)
+    xrightmargin=.75em,
+    tabsize=2,
+    captionpos=b,
+    breaklines=true,
+}
+
+
+
+
+%%% colorbox
+\tcbuselibrary{xparse,hooks,skins,breakable}
+
+\DeclareTColorBox{attention}{m O{}}{
+   title={#1}, empty, coltitle=black, fonttitle=\gtfamily, breakable,
+  left=7.5mm, right=1mm, top=1mm, bottom=1mm,
+  underlay unbroken={
+  \begin{tcbclipinterior}
+    \node [xshift=5pt, yshift=-5pt] at (frame.north west) {\gtfamily{（注）}};
+    \draw ([yshift=-12.5pt, xshift=7pt]frame.north west)--([xshift=7pt]frame.south west);
+  \end{tcbclipinterior}
+  },
+  underlay first={
+  \begin{tcbclipinterior}
+    \node [xshift=5pt, yshift=-5pt] at (frame.north west) {\gtfamily{（注）}};
+    \draw ([yshift=-12.5pt, xshift=7pt]frame.north west)--([xshift=7pt]frame.south west);
+  \end{tcbclipinterior}
+  },
+  underlay middle={
+  \begin{tcbclipinterior}
+    \draw ([xshift=7pt]frame.north west)--([xshift=7pt]frame.south west);
+  \end{tcbclipinterior}
+  },
+  underlay last={
+  \begin{tcbclipinterior}
+     \draw ([xshift=7pt]frame.north west)--([xshift=7pt]frame.south west);
+  \end{tcbclipinterior}
+  },
+  #2}
+
+\DeclareTColorBox{subsection1}{m O{}}{
+  title={#1}, empty, coltitle=black, fonttitle=\large\gtfamily, breakable,
+  left=2mm, right=1mm, top=1mm, bottom=1mm,
+  underlay unbroken={
+  \begin{tcbclipinterior}
+    \filldraw [black] (title.north west) rectangle ([xshift=1.25mm]title.south west);
+  \end{tcbclipinterior}
+  },
+  underlay first={
+  \begin{tcbclipinterior}
+    \filldraw [black] (title.north west) rectangle ([xshift=1.25mm]title.south west);
+  \end{tcbclipinterior}
+  },
+  underlay middle={}, underlay last={}, #2
+  }
+
+\DeclareTColorBox{subsection2}{m O{thick} O{}}{
+  title={#1}, empty, coltitle=black, fonttitle=\large\gtfamily, breakable,
+  left=-1mm, right=-1mm, top=2mm, bottom=2mm,
+  underlay unbroken={
+  \begin{tcbclipinterior}
+    \draw [#2](title.south west)--(title.south east);
+  \end{tcbclipinterior}
+  },
+  underlay first={
+  \begin{tcbclipinterior}
+    \draw [#2](title.south west)--(title.south east);
+  \end{tcbclipinterior}
+  },
+  underlay middle={}, underlay last={}, #3}
+
+\DeclareTColorBox{supplement1}{m O{} O{}}{
+  title={［#1］}, empty, coltitle=black, fonttitle=\gtfamily, breakable,
+  attach boxed title to top left, boxed title style={empty,left=-0.5em,right=-0em},
+  left=0mm, right=0mm, top=0mm, bottom=0mm,
+  underlay unbroken={
+  \begin{tcbclipinterior}
+    \draw [#2] ([yshift=0.5em]title.south east)--([yshift=0.5em]frame.north east);
+    \draw [#2] (frame.south west)--(frame.south east);
+  \end{tcbclipinterior}
+  },underlay first={
+  \begin{tcbclipinterior}
+    \draw [#2] ([yshift=0.5em]title.south east)--([yshift=0.5em]frame.north east);
+  \end{tcbclipinterior}
+  },
+  underlay middle={}, underlay last={
+  \begin{tcbclipinterior}
+    \draw [#2] (frame.south west)--(frame.south east);
+  \end{tcbclipinterior}}, #3}
+
+\DeclareTColorBox{supplement2}{m o O{thick} O{}}{
+  IfValueTF={#2}{title=【#1】〈#2〉}{title=【#1】}, empty, coltitle=black, fonttitle=\gtfamily, breakable,
+  attach boxed title to top left={xshift=2zw}, boxed title style={empty,left=-0.5em,right=-0.5em},
+  left=0mm, right=0mm, top=-0.5em, bottom=0mm,
+  underlay unbroken={
+  \begin{tcbclipinterior}
+    \draw [#3] ([yshift=1em]title.south east)--([yshift=1em]frame.north east);
+    \draw [#3] ([yshift=1em]frame.north west)--([yshift=1em]title.south west);
+    \draw [#3] (frame.south east)--(frame.south west);
+  \end{tcbclipinterior}
+  },underlay first={
+  \begin{tcbclipinterior}
+    \draw [#3] ([yshift=1em]title.south east)--([yshift=1em]frame.north east);
+    \draw [#3] ([yshift=1em]frame.north west)--([yshift=1em]title.south west);
+  \end{tcbclipinterior}
+  },underlay middle={}, underlay last={
+  \begin{tcbclipinterior}
+    \draw [#3] (frame.south east)--(frame.south west);
+  \end{tcbclipinterior}}, #4}
+
+\DeclareTColorBox{mySection1}{m m}{
+  title={#2}, empty,  coltitle=black,
+  attach boxed title to top left={xshift=10mm, yshift*=-\tcboxedtitleheight/2},
+  fonttitle=\large\gtfamily,
+  left=-1mm, right=-1mm, top=2mm, bottom=2mm,
+  underlay={
+  \begin{tcbclipinterior}
+    \fill [lightgray] ([xshift=5mm]frame.north west) circle (4mm);
+    \node at ([xshift=5mm]frame.north west) {\Large\gtfamily{#1}};
+    \draw [thick] ([yshift=-0.5em]interior.north west)--([yshift=-0.5em]interior.north east);
+  \end{tcbclipinterior}
+  }
+}
+
+\DeclareTColorBox{mySection2}{m m}{
+  title={#2}, empty,  coltitle=black,
+  attach boxed title to top left={xshift=10mm, yshift*=-\tcboxedtitleheight/2},
+  fonttitle=\large\gtfamily,
+  left=-1mm, right=-1mm, top=2mm, bottom=2mm,
+  sidebyside align=top seam, sidebyside,
+  underlay={
+  \begin{tcbclipinterior}
+    \fill [lightgray] ([xshift=5mm]frame.north west) circle (4mm);
+    \node at ([xshift=5mm]frame.north west) {\Large\gtfamily{#1}};
+    \draw [thick] ([yshift=-0.5em]interior.north west)--([yshift=-0.5em]interior.north east);
+  \end{tcbclipinterior}
+  }
+}
+
+\DeclareTColorBox{alert}{m}{
+  colframe = #1, colback = #1!10!white, coltext = #1!60!black, boxrule = 0.25mm
+}
+
+\DeclareTotalTCBox{\myTag}{m}{
+    fontupper=\ttfamily,nobeforeafter,tcbox raise base,
+    top=1pt,bottom=1pt,left=1mm,right=1mm,
+    leftrule=0pt,rightrule=0pt,toprule=0pt,bottomrule=0pt,boxsep=1mm,
+    colback=black!5!white,coltext=black!75!white}{#1}
+
+\DeclareTColorBox{card}{m}{
+  title={#1}, colback=white, coltext=black, boxrule = 0.25mm,
+  toptitle=1mm, bottomtitle=1mm,
+  colbacktitle=light, coltitle = black, colframe=black!30!light,
+fonttitle=\large\gtfamily,
+}
+
+
+
+
+
+\DeclareTColorBox{nyGridbox}{m O{} }%
+{enhanced,colframe=black!75!white,colback=white,coltitle=black, fonttitle=\headfont\large,breakable,enlarge top by=.5em, enlarge bottom by=0em,
+underlay unbroken={%
+    \begin{tcbclipinterior}
+        \draw[help lines,step=5mm,black!15!white,shift={(interior.north west)}] (interior.south west) grid (interior.north east);
+    \end{tcbclipinterior}}, 
+underlay first={%
+    \begin{tcbclipinterior}
+        \draw[help lines,step=5mm,black!15!white,shift={(interior.north west)}] (interior.south west) grid (interior.north east);
+    \end{tcbclipinterior}}, 
+underlay last={%
+    \begin{tcbclipinterior}
+        \draw[help lines,step=5mm,black!15!white,shift={(interior.north west)}] (interior.south west) grid (interior.north east);
+    \end{tcbclipinterior}}, title={#1},
+attach title to upper=\vspace{.25em}\newline, #2
+}
+
+\tcbset{%
+nozomu@boxLeftImage/.style={%
+empty,attach boxed title to top left={xshift=2zw,yshift=0zw},
+left=.5em,right=.5em,top=.25em,bottom=.5em,breakable,
+colframe=black,enlarge top by=.5em, enlarge bottom by=0em,
+fonttitle=\headfont,coltitle=black,coltext=black,
+before upper={\parindent1zw},
+boxed title style={empty,left=1.75em,right=.5em,top=0mm,bottom=0mm},
+underlay unbroken={%
+\begin{tcbclipinterior}
+    \draw[thick,black!75!white,very thick] (title.west)-|(frame.south west)--(frame.south east)|-(title.east);
+    \draw[black,very thick] (title.north west) rectangle (title.south east);
+\end{tcbclipinterior}},
+underlay first={%
+\begin{tcbclipinterior}
+    \draw[thick,black!75!white,very thick] (title.west)-|(frame.south west);
+    \draw[thick,black!75!white,very thick] (frame.south east)|-(title.east);
+    \draw[black,very thick] (title.north west) rectangle (title.south east);
+\end{tcbclipinterior}},
+underlay middle={%
+\begin{tcbclipinterior}
+    \draw[thick,black!75!white,very thick] (frame.north east)--(frame.south east);
+    \draw[thick,black!75!white,very thick] (frame.north west)--(frame.south west);
+\end{tcbclipinterior}},
+underlay last={%
+\begin{tcbclipinterior}
+    \draw[thick,black!75!white,very thick] (frame.north west)--(frame.south west)--(frame.south east)--(frame.north east);
+\end{tcbclipinterior}}},%
+nozomu@boxRightImage/.style={%
+empty,attach boxed title to top left={xshift=2zw,yshift=0zw},
+left=.5em,right=.5em,top=.25em,bottom=.5em,breakable,
+colframe=black,enlarge top by=.5em, enlarge bottom by=0em,
+fonttitle=\headfont,coltitle=black,coltext=black,
+before upper={\parindent1zw},
+boxed title style={empty,left=.5em,right=1.75em,top=0mm,bottom=0mm},
+underlay unbroken={%
+\begin{tcbclipinterior}
+    \draw[thick,black!75!white,very thick] (title.west)-|(frame.south west)--(frame.south east)|-(title.east);
+    \draw[black,very thick] (title.north west) rectangle (title.south east);
+\end{tcbclipinterior}},
+underlay first={%
+\begin{tcbclipinterior}
+    \draw[thick,black!75!white,very thick] (title.west)-|(frame.south west);
+    \draw[thick,black!75!white,very thick] (frame.south east)|-(title.east);
+    \draw[black,very thick] (title.north west) rectangle (title.south east);
+\end{tcbclipinterior}},
+underlay middle={%
+\begin{tcbclipinterior}
+    \draw[thick,black!75!white,very thick] (frame.north east)--(frame.south east);
+    \draw[thick,black!75!white,very thick] (frame.north west)--(frame.south west);
+\end{tcbclipinterior}},
+underlay last={%
+\begin{tcbclipinterior}
+    \draw[thick,black!75!white,very thick] (frame.north west)--(frame.south west)--(frame.south east)--(frame.north east);
+\end{tcbclipinterior}},
+}}
+
+\DeclareTColorBox{nyCheck}{m O{}}%
+{nozomu@boxLeftImage,
+underlay unbroken={%
+\begin{tcbclipinterior}
+    \filldraw[black!50!white] ($(title.west)+(.25em,.25em)$) .. controls +(.05em,.05em) and +(-.13em,.1em) .. ++(.3em,.1em) .. controls +(.13em,-.1em) and +(-.1em,.3em) .. ++(.3em,-.6em) .. controls +(.2em,.6em) and +(-.4em,-.2em) .. ++ (1.5em,1.6em) .. controls +(-.4em,-.3em) and +(.2em,.6em) .. ++(-1.37em,-1.9em) -- ++(-.23em,-.18em) .. controls +(-.1em,.3em) and +(.3em,-.1em) .. cycle;
+\end{tcbclipinterior}},
+underlay first={%
+\begin{tcbclipinterior}
+    \filldraw[black!50!white] ($(title.west)+(.25em,.25em)$) .. controls +(.05em,.05em) and +(-.13em,.1em) .. ++(.3em,.1em) .. controls +(.13em,-.1em) and +(-.1em,.3em) .. ++(.3em,-.6em) .. controls +(.2em,.6em) and +(-.4em,-.2em) .. ++ (1.5em,1.6em) .. controls +(-.4em,-.3em) and +(.2em,.6em) .. ++(-1.37em,-1.9em) -- ++(-.23em,-.18em) .. controls +(-.1em,.3em) and +(.3em,-.1em) .. cycle;
+\end{tcbclipinterior}},
+title={#1},#2}
+
+\DeclareTColorBox{nyHint}{m O{}}%
+{nozomu@boxLeftImage,
+underlay unbroken={%
+\begin{tcbclipinterior}
+    \node[inner sep=0pt,xshift=1.2em,yshift=.25em,rotate=10] at (title.west) {\includegraphics[width=1.25em]{icons/lightbulb.png}};
+\end{tcbclipinterior}},
+underlay first={%
+\begin{tcbclipinterior}
+    \node[inner sep=0pt,xshift=1.2em,yshift=.25em,rotate=10] at (title.west) {\includegraphics[width=1.25em]{icons/lightbulb.png}};
+\end{tcbclipinterior}},
+title={#1},#2}
+
+\DeclareTColorBox{nyClip}{m O{}}%
+{nozomu@boxLeftImage,
+underlay unbroken={%
+\begin{tcbclipinterior}
+    \draw[black!50!white,very thick,rotate=-30] ([xshift=.1em,yshift=.6em]$(title.west)+(.6em,-.2em)$) -- +(0,1em) .. controls +(90:.2em) and +(90:.2em) .. +(.3em,1em) -- +(.3em,-.2em) .. controls +(270:.3em) and +(270:.3em) .. +(-.2em,-.2em) -- +(-.2em,1.3em) .. controls +(90:.4em) and +(90:.4em) .. +(.45em,1.3em) -- +(.45em,1.2em);
+    \draw[black,very thick] ($(title.north west)+(1.7em,0)$) -- +(.3em,0);
+    \draw[white,very thick] ($(title.north west)+(1.7em,-1.2pt)$) -- +(.3em,0);
+\end{tcbclipinterior}},
+underlay first={%
+\begin{tcbclipinterior}
+    \draw[black!50!white,very thick,rotate=-30] ([xshift=.1em,yshift=.6em]$(title.west)+(.6em,-.2em)$) -- +(0,1em) .. controls +(90:.2em) and +(90:.2em) .. +(.3em,1em) -- +(.3em,-.2em) .. controls +(270:.3em) and +(270:.3em) .. +(-.2em,-.2em) -- +(-.2em,1.3em) .. controls +(90:.4em) and +(90:.4em) .. +(.45em,1.3em) -- +(.45em,1.2em);
+    \draw[black,very thick] ($(title.north west)+(1.7em,0)$) -- +(.3em,0);
+    \draw[white,very thick] ($(title.north west)+(1.7em,-1.2pt)$) -- +(.3em,0);
+\end{tcbclipinterior}},
+title={#1},#2}
+
+\DeclareTColorBox{nyTreble}{m O{}}%
+{nozomu@boxLeftImage,
+underlay unbroken={%
+\begin{tcbclipinterior}
+    \node[inner sep=0pt,xshift=1.2em,yshift=.4em] at (title.west) {\includegraphics[width=.9em]{icons/treble_clef.png}};
+\end{tcbclipinterior}},
+underlay first={%
+\begin{tcbclipinterior}
+    \node[inner sep=0pt,xshift=1.2em,yshift=.4em] at (title.west) {\includegraphics[width=.9em]{icons/treble_clef.png}};
+\end{tcbclipinterior}},
+title={#1},#2}
+
+\DeclareTColorBox{nyAttention}{m O{}}%
+{nozomu@boxRightImage,
+underlay unbroken={%
+\begin{tcbclipinterior}
+    \node[inner sep=0pt,xshift=-1.2em,yshift=.4em,rotate=-20] at (title.east) {\includegraphics[width=2em]{icons/exclamation.png}};
+\end{tcbclipinterior}},
+underlay first={%
+\begin{tcbclipinterior}
+    \node[inner sep=0pt,xshift=-1.2em,yshift=.4em,rotate=-20] at (title.east) {\includegraphics[width=2em]{icons/exclamation.png}};
+\end{tcbclipinterior}},
+title={#1},#2}
+
+\DeclareTColorBox{nyMemo}{m O{}}%
+{nozomu@boxRightImage,
+underlay unbroken={%
+\begin{tcbclipinterior}
+    \node[inner sep=0pt,xshift=-1em,yshift=.4em,rotate=5] at (title.east) {\includegraphics[width=1.6em]{icons/pencil.png}};
+\end{tcbclipinterior}},
+underlay first={%
+\begin{tcbclipinterior}
+    \node[inner sep=0pt,xshift=-1em,yshift=.4em,rotate=5] at (title.east) {\includegraphics[width=1.6em]{icons/pencil.png}};
+\end{tcbclipinterior}},
+title={#1},#2}
+
+\DeclareTColorBox{nyEighthNote}{m O{}}%
+{nozomu@boxRightImage,
+underlay unbroken={%
+\begin{tcbclipinterior}
+    \node[inner sep=0pt,xshift=-1em,yshift=.4em,rotate=-7] at (title.east) {\includegraphics[width=1.2em]{icons/eighth_note.png}};
+\end{tcbclipinterior}},
+underlay first={%
+\begin{tcbclipinterior}
+    \node[inner sep=0pt,xshift=-1em,yshift=.4em,rotate=-7] at (title.east) {\includegraphics[width=1.2em]{icons/eighth_note.png}};
+\end{tcbclipinterior}},
+title={#1},#2}
+
+\DeclareTColorBox{nyMemoF}{ m O{}}%
+{nozomu@boxRightImage,
+underlay unbroken={%
+\begin{tcbclipinterior}
+    \node[inner sep=0pt,xshift=-1em,yshift=.4em,rotate=5] at (title.east) {\includegraphics[width=1.6em]{icons/pencil.png}};
+    \draw[help lines, dashed, step=18pt] (frame.north west) grid[xstep=0] (frame.south east);
+\end{tcbclipinterior}},
+underlay first={%
+\begin{tcbclipinterior}
+    \node[inner sep=0pt,xshift=-1em,yshift=.4em,rotate=5] at (title.east) {\includegraphics[width=1.6em]{icons/pencil.png}};
+    \draw[help lines, dashed, step=18pt] (frame.north west) grid[xstep=0] (frame.south east);
+\end{tcbclipinterior}},
+height fill,
+title={#1},#2}
+
+\newcommand{\nyMemoFill}[1]{\begin{nyMemoF}{#1}\end{nyMemoF}}
+
+% Theorem environment
+\tcbset{%
+nozomu@theorem/.style={%
+enhanced, empty, left=2mm, right=2mm, top=0mm, attach boxed title to top left={xshift=1.2zw}, 
+boxed title style={empty,left=-.5mm,right=-.5mm,top=-.5mm,bottom=-.5mm}, colframe=black, coltitle=black, coltext=black, colbacktitle=black, breakable,
+underlay unbroken={
+    \draw[black,line width=1pt](title.east) -- (title.east-|frame.east) -- (frame.south east) -- (frame.south west) -- (title.west-|frame.west) -- (title.west);
+},
+underlay first={
+    \draw[black,line width=1pt](title.east) -- (title.east-|frame.east) -- (frame.south east) ;
+    \draw[black,line width=1pt] (frame.south west) -- (title.west-|frame.west) -- (title.west);
+},
+underlay middle={
+    \draw[black,line width=1pt](frame.north east) -- (frame.south east) ;
+    \draw[black,line width=1pt](frame.south west) -- (frame.north west) ;
+},
+underlay last={
+    \draw[black,line width=1pt](frame.north east) -- (frame.south east) -- (frame.south west) -- (frame.north west) ;
+},
+fonttitle=\sffamily\gtfamily
+}}
+
+\DeclareTColorBox[auto counter,number within=section]{theorem}{ o }%
+{nozomu@theorem,IfValueTF={#1}{title=定理\thetcbcounter（#1）}{title=定理\thetcbcounter}}
+
+\DeclareTColorBox[auto counter,number within=section]{theorem*}{ o }%
+{nozomu@theorem,IfValueTF={#1}{title=定理（#1）}{title=定理}}
+
+\DeclareTColorBox[auto counter,number within=section]{definition}{ o }%
+{nozomu@theorem,IfValueTF={#1}{title=定義\thetcbcounter（#1）}{title=定義\thetcbcounter}}
+
+\DeclareTColorBox[auto counter,number within=section]{definition*}{ o }%
+{nozomu@theorem,IfValueTF={#1}{title=定義（#1）}{title=定義}}
+
+\DeclareTColorBox[auto counter,number within=section]{lemma}{ o }%
+{nozomu@theorem,IfValueTF={#1}{title=補題\thetcbcounter（#1）}{title=補題\thetcbcounter}}
+
+\DeclareTColorBox[auto counter,number within=section]{lemma*}{ o }%
+{nozomu@theorem,IfValueTF={#1}{title=補題（#1）}{title=補題}}
+
+\DeclareTColorBox[auto counter,number within=section]{hypo}{ o }%
+{nozomu@theorem,IfValueTF={#1}{title=仮説\thetcbcounter（#1）}{title=仮説\thetcbcounter}}
+
+\DeclareTColorBox[auto counter,number within=section]{hypo*}{ o }%
+{nozomu@theorem,IfValueTF={#1}{title=仮説（#1）}{title=仮説}}
+
+\DeclareTColorBox[auto counter,number within=section]{example}{ o }%
+{nozomu@theorem,IfValueTF={#1}{title=例題\thetcbcounter（#1）}{title=例題\thetcbcounter}}
+
+\DeclareTColorBox[auto counter,number within=section]{example*}{ o }%
+{nozomu@theorem,IfValueTF={#1}{title=例題（#1）}{title=例題}}
+
+
+
+
+
+\endinput
+
