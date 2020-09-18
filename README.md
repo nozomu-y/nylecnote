@@ -1,6 +1,8 @@
 # nylecnote
 
-LaTeX style for note taking.
+LaTeX package for taking lecture notes.
+
+- [manual.pdf](https://github.com/nozomu-y/nylecnote/blob/master/manual.pdf)
 
 <p align="center">
 <img src="https://github.com/nozomu-y/nylecnote/blob/images/sections.png" width="320px">
