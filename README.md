@@ -2,6 +2,13 @@
 
 LaTeX style for note taking.
 
+<p align="center">
+<img src="https://github.com/nozomu-y/nylecnote/blob/images/sections.png" width="320px">
+</p>
+<p align="center">
+<img src="https://github.com/nozomu-y/nylecnote/blob/images/boxes.png" width="320px">
+</p>
+
 ## Requirements
 
 ### Packages
@@ -48,13 +55,13 @@ In the `icons` folder, you can find `change_color.py`.
 Running this python file will convert the color of your images.
 
 ```
-cd icons/
-python3 change_color.py
+> cd icons/
+> python3 change_color.py
 ```
 
 ## Installation
 
-In order to use the package, you will need to place `nylecnote.sty` and `icons` file in the appropriate directory.  
+In order to use the package, you will need to place `nylecnote.sty` and `icons` folder in the appropriate directory.  
 In the command line, execute
 
 ```
