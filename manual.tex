@@ -25,7 +25,11 @@
 \begin{lstlisting}
 \documentclass[dvipdfmx,uplatex,nomag*]{jsarticle}
 \usepackage[<options>]{nylecnote}
+\subtitle{<subtitle>}
 \end{lstlisting}
+
+documentclassのオプションには，{\tt dvipdfmx,uplatex,nomag*}を指定して下さい．
+documentclassには{\tt jsarticle}の他，{\tt jsbook, jsreport}を指定できます．
 
 パッケージのオプションには，{\tt onecolumn, twocolumn, noheader, part}を指定できます．
 \begin{description}
@@ -36,6 +40,8 @@
     \item[{\tt noheader}] 各ページのヘッダーを表示しないようにします．
     \item[{\tt part}] ヘッダーにパート名を表示します．
 \end{description}
+
+{\tt subtitle}を宣言することで，副題を表紙に表示できます．（任意）
 
 \section{見出し}
 
