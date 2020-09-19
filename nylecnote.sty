@@ -1,5 +1,5 @@
 \NeedsTeXFormat{pLaTeX2e}
-\ProvidesPackage{nylecnote}[2020/9/16, Version 1.0]
+\ProvidesPackage{nylecnote}[2020/9/19, Version 1.1]
 \RequirePackage{tcolorbox}
 \RequirePackage[explicit]{titlesec}
 \RequirePackage{titletoc}
@@ -12,6 +12,8 @@
 \RequirePackage{graphicx}
 \usetikzlibrary{calc,shapes,shadows,positioning}
 
+\pgfdeclarelayer{bg} 
+\pgfsetlayers{bg,main}
 
 % package options
 \newif\if@twocol\@twocolfalse
@@ -274,11 +276,26 @@
     {\normalfont\large\headfont\raggedright}}
 \makeatother
 
+\newsavebox{\sectionTile}
+\sbox{\sectionTile}{%
+  \begin{tikzpicture}[x=1cm,y=1cm]
+    \clip (0,0) rectangle (2,2);
+  \begin{scope}[dashed,black!10]
+      \fill (0,2) -- (1,2) -- (0,1);
+      \fill (0,0) -- (2,2) -- (2,1) -- (1,0) -- cycle;
+    \end{scope}
+  \end{tikzpicture}%
+}
+
 \newcommand\secTitle[2]{%
 \begin{tikzpicture}
-    \node (A) [rectangle,minimum width=\linewidth,minimum height=2em,text width=\linewidth-3em,align=left] {\Large\headfont{\hspace{0em}{#2}{#1}}};
-    \filldraw[draw=black!75!white,fill=black,fill opacity=.05,semithick] ($(A.north west)+(0,.25em)$) rectangle ($(A.south east)+(0,-.25em)$);
-    \filldraw[black!75!white] ($(A.north west)+(0,.25em)$) rectangle ($(A.south west)+(.5em,-.25em)$);
+    \node (A) [rectangle,minimum width=\linewidth-0.4pt,minimum height=2em,text width=\linewidth-3em,align=left] {\Large\headfont{\hspace{0em}{#2}{#1}}};
+    \begin{pgfonlayer}{bg}
+        \path[fill tile picture={%
+            \node[inner sep=0pt, outer sep=0pt] {\scalebox{0.1}{\usebox{\sectionTile}}};
+        }] ($(A.north west)+(0,.5em)$) rectangle ($(A.south east)+(0,-.5em)$);
+        \fill[black!75] ($(A.north west)+(0,.5em)$) rectangle ($(A.south west)+(.5em,-.5em)$);
+    \end{pgfonlayer}
 \end{tikzpicture}}
 \newcommand\subsecTitle[2]{%
 \begin{tikzpicture}
