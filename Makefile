@@ -1,6 +1,6 @@
-all: manual clean
+all: manual.pdf clean
 
-manual: 
+manual.pdf: manual.tex
 	xelatex manual
 	xelatex manual
 	xelatex manual
