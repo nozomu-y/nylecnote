@@ -30,59 +30,59 @@
 \pgfsetlayers{bg,main}
 \tcbuselibrary{xparse,hooks,skins,breakable}
 
-\ifxetex
-% font settings
-\setjafontscale{1}
-\setCJKmainfont{ヒラギノ明朝 ProN}
-\setmainfont{ヒラギノ明朝 ProN}
-\setCJKsansfont[BoldFont=ヒラギノ角ゴシック W5]{ヒラギノ角ゴシック W3}
-\setsansfont[BoldFont=ヒラギノ角ゴシック W5]{ヒラギノ角ゴシック W3}
-\setCJKmonofont{Ricty}
-\setmonofont{Ricty}
-% UDDigi
-\setCJKfamilyfont{UDDigi}[BoldFont=UD デジタル 教科書体 NP-B]{UD デジタル 教科書体 NP-R}
-\setfontfamily\font@UDDigi[BoldFont=UD デジタル 教科書体 NP-B]{UD デジタル 教科書体 NP-R}
-\newcommand{\UDDigi}[1]{\CJKfamily{UDDigi}\font@UDDigi #1}
-% TanukiMagic 
-\setCJKfamilyfont{TanukiMagic}{たぬき油性マジック}
-\setfontfamily\font@TanukiMagic{たぬき油性マジック}
-\newcommand{\TanukiMagic}[1]{\CJKfamily{TanukiMagic}\font@TanukiMagic #1}
-% YuMincho
-\setCJKfamilyfont{YuMincho}{游明朝}
-\setfontfamily\font@YuMincho{游明朝}
-\newcommand{\YuMincho}[1]{\CJKfamily{YuMincho}\font@YuMincho #1}
-% LogoTypeGothic
-\setCJKfamilyfont{LogoType}{07ロゴたいぷゴシック7}
-\setfontfamily{\font@LogoType}{07ロゴたいぷゴシック7}
-\newcommand{\LogoType}[1]{\CJKfamily{LogoType}\font@LogoType #1}
-% Sushiki
-\setCJKfamilyfont{Sushiki}{数式フォント}
-\setfontfamily\font@Sushiki{数式フォント}
-\newcommand{\Sushiki}[1]{\CJKfamily{Sushiki}\font@Sushiki #1}
-% PixelMplus12
-\setCJKfamilyfont{PixelMplus}[BoldFont=PixelMplus12 Bold]{PixelMplus12 Regular}
-\setfontfamily\font@PixelMplus[BoldFont=PixelMplus12 Bold]{PixelMplus12 Regular}
-\newcommand{\PixelMplus}[1]{\CJKfamily{PixelMplus}\font@PixelMplus #1}
-% DFPReisho
-% \setCJKfamilyfont{DFPReisho}{ＤＦＰ隷書体}
-% \setfontfamily\font@DFPReisho{ＤＦＰ隷書体}
-% \newcommand{\DFPReisho}[1]{\CJKfamily{DFPReisho}\font@DFPReisho #1}
-% Gabriola
-\setfontfamily\Gabriola{Gabriola}
-% Noteworthy
-\setfontfamily\Noteworthy{Noteworthy}
-% Papyrus
-\setfontfamily\Papyrus{Papyrus}
-% SnellRoundhand
-\setfontfamily\SnellRoundhand{SnellRoundhand}
-% Stencil
-\setfontfamily\Stencil{Stencil}
+% \ifxetex
+% % font settings
+% \setjafontscale{1}
+% \setCJKmainfont{ヒラギノ明朝 ProN}
+% \setmainfont{ヒラギノ明朝 ProN}
+% \setCJKsansfont[BoldFont=ヒラギノ角ゴシック W5]{ヒラギノ角ゴシック W3}
+% \setsansfont[BoldFont=ヒラギノ角ゴシック W5]{ヒラギノ角ゴシック W3}
+% \setCJKmonofont{Ricty}
+% \setmonofont{Ricty}
+% % UDDigi
+% \setCJKfamilyfont{UDDigi}[BoldFont=UD デジタル 教科書体 NP-B]{UD デジタル 教科書体 NP-R}
+% \setfontfamily\font@UDDigi[BoldFont=UD デジタル 教科書体 NP-B]{UD デジタル 教科書体 NP-R}
+% \newcommand{\UDDigi}[1]{\CJKfamily{UDDigi}\font@UDDigi #1}
+% % TanukiMagic 
+% \setCJKfamilyfont{TanukiMagic}{たぬき油性マジック}
+% \setfontfamily\font@TanukiMagic{たぬき油性マジック}
+% \newcommand{\TanukiMagic}[1]{\CJKfamily{TanukiMagic}\font@TanukiMagic #1}
+% % YuMincho
+% \setCJKfamilyfont{YuMincho}{游明朝}
+% \setfontfamily\font@YuMincho{游明朝}
+% \newcommand{\YuMincho}[1]{\CJKfamily{YuMincho}\font@YuMincho #1}
+% % LogoTypeGothic
+% \setCJKfamilyfont{LogoType}{07ロゴたいぷゴシック7}
+% \setfontfamily{\font@LogoType}{07ロゴたいぷゴシック7}
+% \newcommand{\LogoType}[1]{\CJKfamily{LogoType}\font@LogoType #1}
+% % Sushiki
+% \setCJKfamilyfont{Sushiki}{数式フォント}
+% \setfontfamily\font@Sushiki{数式フォント}
+% \newcommand{\Sushiki}[1]{\CJKfamily{Sushiki}\font@Sushiki #1}
+% % PixelMplus12
+% \setCJKfamilyfont{PixelMplus}[BoldFont=PixelMplus12 Bold]{PixelMplus12 Regular}
+% \setfontfamily\font@PixelMplus[BoldFont=PixelMplus12 Bold]{PixelMplus12 Regular}
+% \newcommand{\PixelMplus}[1]{\CJKfamily{PixelMplus}\font@PixelMplus #1}
+% % DFPReisho
+% % \setCJKfamilyfont{DFPReisho}{ＤＦＰ隷書体}
+% % \setfontfamily\font@DFPReisho{ＤＦＰ隷書体}
+% % \newcommand{\DFPReisho}[1]{\CJKfamily{DFPReisho}\font@DFPReisho #1}
+% % Gabriola
+% \setfontfamily\Gabriola{Gabriola}
+% % Noteworthy
+% \setfontfamily\Noteworthy{Noteworthy}
+% % Papyrus
+% \setfontfamily\Papyrus{Papyrus}
+% % SnellRoundhand
+% \setfontfamily\SnellRoundhand{SnellRoundhand}
+% % Stencil
+% \setfontfamily\Stencil{Stencil}
 
-\XeTeXlinebreaklocale "ja"
+% \XeTeXlinebreaklocale "ja"
 
-\renewcommand{\headfont}{\UDDigi}
-\renewcommand{\emph}[1]{{\sffamily\bfseries{#1}}}
-\fi
+% \renewcommand{\headfont}{\UDDigi}
+% \renewcommand{\emph}[1]{{\sffamily\bfseries{#1}}}
+% \fi
 
 % package options
 \newif\if@twocol\@twocolfalse
