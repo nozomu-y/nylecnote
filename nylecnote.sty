@@ -1,19 +1,88 @@
-\NeedsTeXFormat{pLaTeX2e}
-\ProvidesPackage{nylecnote}[2020/9/19, Version 1.1]
+\ProvidesPackage{nylecnote}[2020/9/20 Version1.0]
+
+%%% Packages %%%
+\RequirePackage{ifxetex}
+\ifxetex
+\RequirePackage{zxjatype}
+\RequirePackage{fontspec}
+% \RequirePackage{xltxtra}
+\RequirePackage{xeCJK}
+\fi
+\RequirePackage{tikz,tikzpagenodes,tikzscale}
+\RequirePackage{varwidth}
 \RequirePackage{tcolorbox}
 \RequirePackage[explicit]{titlesec}
 \RequirePackage{titletoc}
-\RequirePackage{xcolor-material}
-\RequirePackage{hyperref,pxjahyper}
-\RequirePackage{tikz,tikzscale,tikzpagenodes,varwidth}
+\ifxetex
+\RequirePackage[unicode]{hyperref}
+\else
+\RequirePackage{hyperref}
+\fi
 \RequirePackage{atbegshi}
 \RequirePackage{listings}
-\RequirePackage{amsmath,amssymb,amsthm,mathtools}
 \RequirePackage{graphicx}
-\usetikzlibrary{calc,shapes,shadows,positioning}
+\RequirePackage{xcolor-material}
+\RequirePackage{amsmath,amssymb,amsthm,mathtools}
 
+% tikz settings
+\usetikzlibrary{calc,shapes,shadows,positioning,patterns}
 \pgfdeclarelayer{bg} 
 \pgfsetlayers{bg,main}
+\tcbuselibrary{xparse,hooks,skins,breakable}
+
+\ifxetex
+% font settings
+\setjafontscale{1}
+\setCJKmainfont{ヒラギノ明朝 ProN}
+\setmainfont{ヒラギノ明朝 ProN}
+\setCJKsansfont[BoldFont=ヒラギノ角ゴシック W5]{ヒラギノ角ゴシック W3}
+\setsansfont[BoldFont=ヒラギノ角ゴシック W5]{ヒラギノ角ゴシック W3}
+\setCJKmonofont{Ricty}
+\setmonofont{Ricty}
+% UDDigi
+\setCJKfamilyfont{UDDigi}[BoldFont=UD デジタル 教科書体 NP-B]{UD デジタル 教科書体 NP-R}
+\setfontfamily\font@UDDigi[BoldFont=UD デジタル 教科書体 NP-B]{UD デジタル 教科書体 NP-R}
+\newcommand{\UDDigi}[1]{\CJKfamily{UDDigi}\font@UDDigi #1}
+% TanukiMagic 
+\setCJKfamilyfont{TanukiMagic}{たぬき油性マジック}
+\setfontfamily\font@TanukiMagic{たぬき油性マジック}
+\newcommand{\TanukiMagic}[1]{\CJKfamily{TanukiMagic}\font@TanukiMagic #1}
+% YuMincho
+\setCJKfamilyfont{YuMincho}{游明朝}
+\setfontfamily\font@YuMincho{游明朝}
+\newcommand{\YuMincho}[1]{\CJKfamily{YuMincho}\font@YuMincho #1}
+% LogoTypeGothic
+\setCJKfamilyfont{LogoType}{07ロゴたいぷゴシック7}
+\setfontfamily{\font@LogoType}{07ロゴたいぷゴシック7}
+\newcommand{\LogoType}[1]{\CJKfamily{LogoType}\font@LogoType #1}
+% Sushiki
+\setCJKfamilyfont{Sushiki}{数式フォント}
+\setfontfamily\font@Sushiki{数式フォント}
+\newcommand{\Sushiki}[1]{\CJKfamily{Sushiki}\font@Sushiki #1}
+% PixelMplus12
+\setCJKfamilyfont{PixelMplus}[BoldFont=PixelMplus12 Bold]{PixelMplus12 Regular}
+\setfontfamily\font@PixelMplus[BoldFont=PixelMplus12 Bold]{PixelMplus12 Regular}
+\newcommand{\PixelMplus}[1]{\CJKfamily{PixelMplus}\font@PixelMplus #1}
+% DFPReisho
+% \setCJKfamilyfont{DFPReisho}{ＤＦＰ隷書体}
+% \setfontfamily\font@DFPReisho{ＤＦＰ隷書体}
+% \newcommand{\DFPReisho}[1]{\CJKfamily{DFPReisho}\font@DFPReisho #1}
+% Gabriola
+\setfontfamily\Gabriola{Gabriola}
+% Noteworthy
+\setfontfamily\Noteworthy{Noteworthy}
+% Papyrus
+\setfontfamily\Papyrus{Papyrus}
+% SnellRoundhand
+\setfontfamily\SnellRoundhand{SnellRoundhand}
+% Stencil
+\setfontfamily\Stencil{Stencil}
+
+\XeTeXlinebreaklocale "ja"
+
+\renewcommand{\headfont}{\UDDigi}
+\renewcommand{\emph}[1]{{\sffamily\bfseries{#1}}}
+\fi
 
 % package options
 \newif\if@twocol\@twocolfalse
@@ -33,13 +102,13 @@
 \fi
 
 \if@header
-\RequirePackage[top=30truemm,bottom=15truemm,left=15truemm,right=15truemm]{geometry}
+\setpagelayout{top=20truemm,bottom=10truemm,left=15truemm,right=15truemm}
 \else
-  \if@twocol
-  \RequirePackage[top=20truemm,bottom=20truemm,left=15truemm,right=15truemm]{geometry}
-  \else
-  \RequirePackage[top=20truemm,bottom=20truemm,left=20truemm,right=20truemm]{geometry}
-  \fi
+    \if@twocol
+    \setpagelayout{top=20truemm,bottom=20truemm,left=15truemm,right=15truemm}
+    \else
+    \setpagelayout{top=20truemm,bottom=20truemm,left=20truemm,right=20truemm}
+    \fi
 \fi
 
 \if@part
@@ -53,11 +122,8 @@
 
 \newcommand{\parttitle}{}
 
-\makeatletter
 \pretocmd{\@part}{\gdef\parttitle{#1}}{}{}
 \pretocmd{\@spart}{\gdef\parttitle{#1}}{}{}
-\makeatother
-
 
 % Color Definition
 % Color based on bootstrap
@@ -87,7 +153,6 @@
 \colorlet{nyOrange}{MaterialOrange600}
 \colorlet{nyDeepOrange}{MaterialDeepOrange600}
 
-\makeatletter
 % Settings for hyperref
 \hypersetup{
     setpagesize=false,
@@ -101,38 +166,36 @@
     pdftitle={\@title},
     pdfauthor={\@author}
 }
-\makeatother
 
-\makeatletter
+
 % put the cite number on the upper right
 \def\@cite#1#2{$^{\mbox{\tiny[{#1\if@tempswa , #2\fi}]}}$}
 % extend the footnoterule to page width
 \renewcommand{\footnoterule}{\kern-3\p@\hrule width 1\columnwidth\kern 2.6\p@}
-\makeatother
-
-\renewcommand{\emph}[1]{\textsf{\textgt{#1}}}
 \setlength{\columnseprule}{1pt}
 
-
+% Declare subtitle
+\newif\ifsubtitleempty
+\def\subtitle#1{\gdef\@subtitle{#1}}
+\let\@subtitle\@empty
 
 % Header Design
-\makeatletter
 \if@part
 \newcommand\HeaderLeft{%
     \begin{tikzpicture}[remember picture,overlay]%
         \draw[ultra thick] ($(current page text area.north west)+(0,24pt)$) -- ($(current page text area.north east)+(0,24pt)$);
         \draw[ultra thick] ($(current page text area.north west)+(24pt,48pt)$) -- ($(current page text area.north west)+(24pt,18pt)$);
         \draw[ultra thick,opacity=.3] ($(current page text area.north west)+(28pt,46pt)$) -- ($(current page text area.north west)+(28pt,14pt)$);
-        \node at ($(current page text area.north west)+(32pt,32pt)$) [right] {\fontsize{10pt}{0pt}\selectfont{\@title\hspace{1em}\@subtitle}};
-        \node at ($(current page text area.north west)+(12pt,32pt)$) {\fontsize{10pt}{0pt}\selectfont{\thepage}};
+        \node at ($(current page text area.north west)+(32pt,32pt)$) [right] {\fontsize{10pt}{0pt}\selectfont{\textsf\@title\hspace{1em}\@subtitle}};
+        \node at ($(current page text area.north west)+(12pt,32pt)$) {\fontsize{10pt}{0pt}\selectfont{\textsf\thepage}};
     \end{tikzpicture}}%
 \newcommand\HeaderRight{%
     \begin{tikzpicture}[remember picture,overlay]%
         \draw[ultra thick] ($(current page text area.north west)+(0,24pt)$) -- ($(current page text area.north east)+(0,24pt)$);
         \draw[ultra thick] ($(current page text area.north east)+(-24pt,48pt)$) -- ($(current page text area.north east)+(-24pt,18pt)$);
         \draw[ultra thick,opacity=.3] ($(current page text area.north east)+(-28pt,46pt)$) -- ($(current page text area.north east)+(-28pt,14pt)$);
-        \node at ($(current page text area.north east)+(-32pt,32pt)$) [left] {\fontsize{10pt}{0pt}\selectfont{\prepartname\thepart\postpartname\hspace{1em}\parttitle}};
-        \node at ($(current page text area.north east)+(-12pt,32pt)$) {\fontsize{10pt}{0pt}\selectfont{\thepage}};
+        \node at ($(current page text area.north east)+(-32pt,32pt)$) [left] {\fontsize{10pt}{0pt}\selectfont{\textsf\prepartname\thepart\postpartname\hspace{1em}\parttitle}};
+        \node at ($(current page text area.north east)+(-12pt,32pt)$) {\fontsize{10pt}{0pt}\selectfont{\textsf\thepage}};
     \end{tikzpicture}}%
 \else
 \newcommand\HeaderLeft{%
@@ -140,19 +203,18 @@
         \draw[ultra thick] ($(current page text area.north west)+(0,24pt)$) -- ($(current page text area.north east)+(0,24pt)$);
         \draw[ultra thick] ($(current page text area.north west)+(24pt,48pt)$) -- ($(current page text area.north west)+(24pt,18pt)$);
         \draw[ultra thick,opacity=.3] ($(current page text area.north west)+(28pt,46pt)$) -- ($(current page text area.north west)+(28pt,14pt)$);
-        \node at ($(current page text area.north west)+(32pt,32pt)$) [right] {\fontsize{10pt}{0pt}\selectfont{\@title}};
-        \node at ($(current page text area.north west)+(12pt,32pt)$) {\fontsize{10pt}{0pt}\selectfont{\thepage}};
+        \node at ($(current page text area.north west)+(32pt,32pt)$) [right] {\fontsize{10pt}{0pt}\selectfont{\textsf\@title}};
+        \node at ($(current page text area.north west)+(12pt,32pt)$) {\fontsize{10pt}{0pt}\selectfont{\textsf\thepage}};
     \end{tikzpicture}}%
 \newcommand\HeaderRight{%
     \begin{tikzpicture}[remember picture,overlay]%
         \draw[ultra thick] ($(current page text area.north west)+(0,24pt)$) -- ($(current page text area.north east)+(0,24pt)$);
         \draw[ultra thick] ($(current page text area.north east)+(-24pt,48pt)$) -- ($(current page text area.north east)+(-24pt,18pt)$);
         \draw[ultra thick,opacity=.3] ($(current page text area.north east)+(-28pt,46pt)$) -- ($(current page text area.north east)+(-28pt,14pt)$);
-        \node at ($(current page text area.north east)+(-32pt,32pt)$) [left] {\fontsize{10pt}{0pt}\selectfont{\@subtitle}};
-        \node at ($(current page text area.north east)+(-12pt,32pt)$) {\fontsize{10pt}{0pt}\selectfont{\thepage}};
+        \node at ($(current page text area.north east)+(-32pt,32pt)$) [left] {\fontsize{10pt}{0pt}\selectfont{\textsf\@subtitle}};
+        \node at ($(current page text area.north east)+(-12pt,32pt)$) {\fontsize{10pt}{0pt}\selectfont{\textsf\thepage}};
     \end{tikzpicture}}%
 \fi
-\makeatother
 
 \pagestyle{empty}
 \newcommand\Footer{%
@@ -160,7 +222,6 @@
         \node at ($(current page text area.south)+(0,-2em)$) {\fontsize{10pt}{0pt}\selectfont{\thepage}};
     \end{tikzpicture}}
 
-\makeatletter
 \if@header
 \AtBeginShipout{%
     \AtBeginShipoutAddToBox{%
@@ -176,18 +237,8 @@
   }
 }
 \fi
-\makeatother
-
-% Declare subtitle
-\makeatletter
-\newif\ifsubtitleempty
-\def\subtitle#1{\gdef\@subtitle{#1}}
-\let\@subtitle\@empty
-\makeatother
-
 
 % title design
-\makeatletter
 \if@header
 \renewcommand{\maketitle}{%
     \begin{titlepage}%
@@ -210,9 +261,9 @@
     \begingroup
       \renewcommand\thefootnote{\@fnsymbol\c@footnote}%
       \def\@makefnmark{\rlap{\@textsuperscript{\normalfont\@thefnmark}}}%
-      \long\def\@makefntext##1{\advance\leftskip 3zw
-        \parindent 1zw\noindent
-        \llap{\@textsuperscript{\normalfont\@thefnmark}\hskip0.3zw}##1}%
+      \long\def\@makefntext##1{\advance\leftskip 3\jsZw
+        \parindent 1\jsZw\noindent
+        \llap{\@textsuperscript{\normalfont\@thefnmark}\hskip0.3\jsZw}##1}%
       \if@twocolumn
         \ifnum \col@number=\@ne
           \@maketitle
@@ -244,8 +295,8 @@
     % \vskip 2em
     \begin{center}%
       \let\footnote\thanks
-      {\LARGE \UDDigi{m}{\@title} \par}%
-      {\Large \UDDigi{m}{\@subtitle} \par}%
+      {\LARGE \@title \par}%
+  {\Large \@subtitle \par}%
       \vskip 1.5em
       {\large
         \lineskip .5em
@@ -260,21 +311,11 @@
   }
 \fi
 
+% Definition of section style
 \renewcommand{\paragraph}{\@startsection{paragraph}{4}{\z@}%
-    {\z@}{\if@slide .4\Cvs \else -1zw\fi}
-    {\normalfont\normalsize\jsParagraphMark\headfont}}
-    \renewcommand{\jsParagraphMark}{▶︎}
-    \makeatother
-
-\makeatother
-
-%Definition of sectio style
-\makeatletter
-\newcommand{\tocsection}{%
-    \@startsection{section}{1}{\z@}%
-    {0.6\Cvs}{0.4\Cvs}%
-    {\normalfont\large\headfont\raggedright}}
-\makeatother
+    {\z@}{\if@slide .4\Cvs \else -1\jsZw\fi}
+    {\normalfont\normalsize\headfont\jsParagraphMark}}
+\renewcommand{\jsParagraphMark}{{\sffamily ▶︎}}
 
 \newsavebox{\sectionTile}
 \sbox{\sectionTile}{%
@@ -323,7 +364,7 @@
 
 \titleformat{\section}
 {}{}{0pt}
-{\secTitle{#1}{\thesection\hspace{1zw}}}
+{\secTitle{#1}{\thesection\hspace{1\jsZw}}}
 
 \titleformat{name=\section,numberless}
 {}{}{0pt}
@@ -331,7 +372,7 @@
 
 \titleformat{\subsection}
 {}{}{0pt}
-{\subsecTitle{#1}{\thesubsection\hspace{1zw}}}
+{\subsecTitle{#1}{\thesubsection\hspace{1\jsZw}}}
 
 \titleformat{name=\subsection,numberless}
 {}{}{0pt}
@@ -339,63 +380,30 @@
 
 \titleformat{\subsubsection}
 {}{}{0pt}
-{\subsubsecTitle{#1}{\thesubsubsection\hspace{1zw}}}
+{\subsubsecTitle{#1}{\thesubsubsection\hspace{1\jsZw}}}
 
 \titleformat{name=\subsubsection,numberless}
 {}{}{0pt}
 {\subsubsecTitle{#1}{}\addcontentsline{toc}{subsubsection}{#1}}
 
-\makeatletter
 \renewcommand{\tableofcontents}{%
   \settowidth\jsc@tocl@width{\headfont\presectionname\postsectionname}%
   \settowidth\@tempdima{\headfont\appendixname}%
   \ifdim\jsc@tocl@width<\@tempdima\relax\setlength\jsc@tocl@width{\@tempdima}\fi
-  \ifdim\jsc@tocl@width<2zw \divide\jsc@tocl@width by 2 \advance\jsc@tocl@width 1zw\fi
-  \tocsection*{\contentsname}
+  \ifdim\jsc@tocl@width<2\jsZw \divide\jsc@tocl@width by 2 \advance\jsc@tocl@width 1\jsZw\fi
+  \noindent
+  \secTitle{\contentsname}{}%
   \@mkboth{\contentsname}{\contentsname}%
   \@starttoc{toc}%
 }
-\makeatother
 
 
 % titletoc
-\titlecontents{part}[0zw]{\vspace{2zh}\headfont\Large}{\thecontentslabel\hspace{1zw}}{\hspace{0zw}}{\hfill\contentspage}
-\titlecontents{chapter}[0zw]{\vspace{1zh}\headfont\large}{\thecontentslabel\hspace{1zw}}{\hspace{0zw}}{\hfill\contentspage}
-\titlecontents{section}[1zw]{\vspace{.5zh}\headfont\large}{\thecontentslabel\hspace{1zw}}{\hspace{0zw}}{\hfill\contentspage}
-\titlecontents{subsection}[3zw]{\vspace{.15zh}\headfont}{\thecontentslabel\hspace{1zw}}{\hspace{0zw}}{\hspace{1zw}\dotfill\contentspage}
-\titlecontents{subsubsection}[5zw]{\vspace{.1zh}\headfont\small}{\thecontentslabel\hspace{1zw}}{\hspace{0zw}}{}
-
-% proof environment
-\makeatletter
-\renewenvironment{proof}[1][\proofname]{\par
-    \pushQED{\qed}%
-    \normalfont \topsep6\p@\@plus6\p@\relax
-    \trivlist
-    \item[\hskip\labelsep
-            \itshape
-            {\bf\underline{#1}}]\ignorespaces \mbox{}\par
-    }{%
-    \popQED\endtrivlist\@endpefalse
-}
-\makeatother
-\renewcommand\proofname{\headfont{証明}}
-\newenvironment{solution}{\begin{proof}[解答]}{\end{proof}}
-
-% highlights
-\newcommand{\highlight}[2][yellow]{\tikz[baseline=(x.base)]{\node[rectangle,rounded corners,fill=#1!10](x){#2};}}
-\newcommand{\highlightcap}[3][yellow]{%
-    \tikz[baseline=(x.base)]{%
-        \node[rectangle,rounded corners,fill=#1!10](x){$#2$};
-        \node[below,color=#1] at (x.south) {#3}; 
-    }
-}
-\newcommand{\highlightcup}[3][yellow]{%
-    \tikz[baseline=(x.base)]{%
-        \node[rectangle,rounded corners,fill=#1!10](x){$#2$};
-        \node[above,color=#1] at (x.north) {#3}; 
-    }
-}
-
+\titlecontents{part}[0\jsZw]{\vspace{2\jsZw}\headfont\Large}{\thecontentslabel\hspace{1\jsZw}}{\hspace{0\jsZw}}{\hfill\contentspage}
+\titlecontents{chapter}[0\jsZw]{\vspace{1\jsZw}\headfont\large}{\thecontentslabel\hspace{1\jsZw}}{\hspace{0\jsZw}}{\hfill\contentspage}
+\titlecontents{section}[1\jsZw]{\vspace{.5\jsZw}\headfont\large}{\thecontentslabel\hspace{1\jsZw}}{\hspace{0\jsZw}}{\hfill\contentspage}
+\titlecontents{subsection}[3\jsZw]{\vspace{.15\jsZw}\headfont}{\thecontentslabel\hspace{1\jsZw}}{\hspace{0\jsZw}}{\hspace{1\jsZw}\dotfill\contentspage}
+\titlecontents{subsubsection}[5\jsZw]{\vspace{.1\jsZw}\headfont\small}{\thecontentslabel\hspace{1\jsZw}}{\hspace{0\jsZw}}{}
 
 % numberings
 \makeatletter
@@ -426,9 +434,9 @@
 \definecolor{editorPink}{cmyk}{0, 1, 0, 0}
 
 \lstset{
-    basicstyle={\small},
+    basicstyle={\small\ttfamily},
     backgroundcolor=\color{white},%背景色
-    basicstyle=\footnotesize,%標準書体
+    basicstyle=\footnotesize\ttfamily,%標準書体
     % basicstyle=\ttfamily\footnotesize,%標準書体
     % commentstyle=\normalfont\color{gray},
     % stringstyle=\color{green},%文字列リテラルの書体
@@ -446,7 +454,7 @@
     frame=tblr,%フレームの設定
     frameround=ffff,%フレーム角の形状
     framesep=5pt,%本文からframeまでの間隔
-    xleftmargin=3zw,
+    xleftmargin=3\jsZw,
     showstringspaces=false,
     numbers=left,%プログラムソースの行番号の位置
     stepnumber=1,%stepnumberで設定した値おきに行番号が表示されます
@@ -460,11 +468,38 @@
     breaklines=true,
 }
 
+% proof environment
+\makeatletter
+\renewenvironment{proof}[1][\proofname]{\par
+    \pushQED{\qed}%
+    \normalfont \topsep6\p@\@plus6\p@\relax
+    \trivlist
+    \item[\hskip\labelsep
+            \itshape
+            {\bf\underline{#1}}]\ignorespaces \mbox{}\par
+    }{%
+    \popQED\endtrivlist\@endpefalse
+}
+\makeatother
+\renewcommand\proofname{\mdseries\headfont{証明}}
+\newenvironment{solution}{\begin{proof}[\mdseries\headfont{解答}]}{\end{proof}}
 
-
+% highlights
+\newcommand{\highlight}[2][yellow]{\tikz[baseline=(x.base)]{\node[rectangle,rounded corners,fill=#1!10](x){#2};}}
+\newcommand{\highlightcap}[3][yellow]{%
+    \tikz[baseline=(x.base)]{%
+        \node[rectangle,rounded corners,fill=#1!10](x){$#2$};
+        \node[below,color=#1] at (x.south) {#3}; 
+    }
+}
+\newcommand{\highlightcup}[3][yellow]{%
+    \tikz[baseline=(x.base)]{%
+        \node[rectangle,rounded corners,fill=#1!10](x){$#2$};
+        \node[above,color=#1] at (x.north) {#3}; 
+    }
+}
 
 %%% colorbox
-\tcbuselibrary{xparse,hooks,skins,breakable}
 
 \DeclareTColorBox{attention}{m O{}}{
    title={#1}, empty, coltitle=black, fonttitle=\gtfamily, breakable,
@@ -545,7 +580,7 @@
 
 \DeclareTColorBox{supplement2}{m o O{thick} O{}}{
   IfValueTF={#2}{title=【#1】〈#2〉}{title=【#1】}, empty, coltitle=black, fonttitle=\gtfamily, breakable,
-  attach boxed title to top left={xshift=2zw}, boxed title style={empty,left=-0.5em,right=-0.5em},
+  attach boxed title to top left={xshift=2\jsZw}, boxed title style={empty,left=-0.5em,right=-0.5em},
   left=0mm, right=0mm, top=-0.5em, bottom=0mm,
   underlay unbroken={
   \begin{tcbclipinterior}
@@ -632,11 +667,11 @@ attach title to upper=\vspace{.25em}\newline, #2
 
 \tcbset{%
 nozomu@boxLeftImage/.style={%
-empty,attach boxed title to top left={xshift=2zw,yshift=0zw},
+empty,attach boxed title to top left={xshift=2\jsZw,yshift=0\jsZw},
 left=.5em,right=.5em,top=.25em,bottom=.5em,breakable,
 colframe=black,enlarge top by=.5em, enlarge bottom by=0em,
 fonttitle=\headfont,coltitle=black,coltext=black,
-before upper={\parindent1zw},
+before upper={\parindent1\jsZw},
 boxed title style={empty,left=1.75em,right=.5em,top=0mm,bottom=0mm},
 underlay unbroken={%
 \begin{tcbclipinterior}
@@ -659,11 +694,11 @@ underlay last={%
     \draw[thick,black!75!white,very thick] (frame.north west)--(frame.south west)--(frame.south east)--(frame.north east);
 \end{tcbclipinterior}}},%
 nozomu@boxRightImage/.style={%
-empty,attach boxed title to top left={xshift=2zw,yshift=0zw},
+empty,attach boxed title to top left={xshift=2\jsZw,yshift=0\jsZw},
 left=.5em,right=.5em,top=.25em,bottom=.5em,breakable,
 colframe=black,enlarge top by=.5em, enlarge bottom by=0em,
 fonttitle=\headfont,coltitle=black,coltext=black,
-before upper={\parindent1zw},
+before upper={\parindent1\jsZw},
 boxed title style={empty,left=.5em,right=1.75em,top=0mm,bottom=0mm},
 underlay unbroken={%
 \begin{tcbclipinterior}
@@ -795,7 +830,7 @@ title={#1},#2}
 % Theorem environment
 \tcbset{%
 nozomu@theorem/.style={%
-enhanced, empty, left=2mm, right=2mm, top=0mm, attach boxed title to top left={xshift=1.2zw}, 
+enhanced, empty, left=2mm, right=2mm, top=0mm, attach boxed title to top left={xshift=1.2\jsZw}, 
 boxed title style={empty,left=-.5mm,right=-.5mm,top=-.5mm,bottom=-.5mm}, colframe=black, coltitle=black, coltext=black, colbacktitle=black, breakable,
 underlay unbroken={
     \draw[black,line width=1pt](title.east) -- (title.east-|frame.east) -- (frame.south east) -- (frame.south west) -- (title.west-|frame.west) -- (title.west);
@@ -843,8 +878,6 @@ fonttitle=\sffamily\gtfamily
 
 \DeclareTColorBox[auto counter,number within=section]{example*}{ o }%
 {nozomu@theorem,IfValueTF={#1}{title=例題（#1）}{title=例題}}
-
-
 
 
 

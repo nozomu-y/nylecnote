@@ -1,6 +1,8 @@
-\documentclass[dvipdfmx,uplatex,b5j,8pt,nomag*]{jsarticle}
-\usepackage{nylecnote}
-\usepackage{lipsum, multicol,jlisting,bxjalipsum}
+\documentclass[xelatex,ja=standard,b5j,8pt,magstyle=nomag*,japaram={units}]{bxjsarticle}
+% \documentclass[uplatex,dvipdfmx,ja=standard,b5j,8pt,magstyle=nomag*,japaram={units}]{bxjsarticle}
+\usepackage[onecolumn]{nylecnote}
+\usepackage{lipsum, multicol,bxjalipsum}
+\usepackage{metalogo}
 \title{{\tt nylecnote}}
 \subtitle{マニュアル}
 \author{nozomu-y}
@@ -23,13 +25,15 @@
 
 \section{プリアンブル}
 \begin{lstlisting}
-\documentclass[dvipdfmx,uplatex,nomag*]{jsarticle}
+\documentclass[xelatex,ja=standard,b5j,8pt,magstyle=nomag*,japaram={units}]{bxjsarticle}
+% \documentclass[uplatex,dvipdfmx,ja=standard,b5j,8pt,magstyle=nomag*,japaram={units}]{bxjsarticle}
 \usepackage[<options>]{nylecnote}
 \subtitle{<subtitle>}
 \end{lstlisting}
 
-documentclassのオプションには，{\tt dvipdfmx,uplatex,nomag*}を指定して下さい．
-documentclassには{\tt jsarticle}の他，{\tt jsbook, jsreport}を指定できます．
+\XeLaTeX を使う場合，documentclassのオプションには，{\tt xelatex,ja=standard,magstyle=nomag*}を指定して下さい．
+(u)p\LaTeX を使う場合，documentclassのオプションには，{\tt uplatex,dvipdfmx,ja=standard,magstyle=nomag*}を指定して下さい．
+また，documentclassには{\tt bxjsarticle}を指定して下さい．
 
 パッケージのオプションには，{\tt onecolumn, twocolumn, noheader, part}を指定できます．
 \begin{description}
@@ -43,6 +47,7 @@ documentclassには{\tt jsarticle}の他，{\tt jsbook, jsreport}を指定でき
 
 {\tt subtitle}を宣言することで，副題を表紙に表示できます．（任意）
 
+\newpage
 \section{見出し}
 
 \begin{multicols}{2}
@@ -62,7 +67,84 @@ documentclassには{\tt jsarticle}の他，{\tt jsbook, jsreport}を指定でき
 
 \end{multicols}
 
+\ifxetex
+\section{フォント}
 
+\XeLaTeX を使う場合，xeCJK パッケージを用いてシステムフォントを利用できます．
+
+\begin{multicols}{2}
+    
+
+ヒラギノ明朝 ProN
+
+{\bfseries ヒラギノ明朝 ProN}
+
+{\sffamily ヒラギノ角ゴシック W3}
+
+{\sffamily\bfseries ヒラギノ角ゴシック W5}
+
+{\ttfamily Ricty あいうえお}
+
+{\ttfamily\bfseries Ricty}
+
+{\UDDigi UD デジタル 教科書体 NP-R}
+
+{\bf\UDDigi UD デジタル 教科書体 NP-B}
+
+{\TanukiMagic たぬき油性マジック tanuki}
+
+{\YuMincho 游明朝}
+
+{\YuMincho\bfseries 游明朝}
+
+{\LogoType ロゴたいぷゴシック}
+
+{\Sushiki 数式フォント}
+
+{\PixelMplus ピクセル・エムプラス}
+
+{\bf\PixelMplus ピクセル・エムプラス}
+
+% {\DFPReisho ＤＦＰ隷書体}
+
+{\Gabriola Gabriola}
+
+{\Noteworthy Noteworthy}
+
+{\Papyrus Papyrus}
+
+{\SnellRoundhand Snell Roundhand}
+
+{\Stencil Stencil}
+
+\columnbreak
+
+\begin{lstlisting}
+ヒラギノ明朝 ProN
+{\bfseries ヒラギノ明朝 ProN}
+{\sffamily ヒラギノ角ゴシック W3}
+{\sffamily\bfseries ヒラギノ角ゴシック W5}
+{\ttfamily Ricty あいうえお}
+{\ttfamily\bfseries Ricty}
+{\UDDigi UD デジタル 教科書体 NP-R}
+{\bf\UDDigi UD デジタル 教科書体 NP-B}
+{\TanukiMagic たぬき油性マジック tanuki}
+{\YuMincho 游明朝}
+{\YuMincho\bfseries 游明朝}
+{\LogoType ロゴたいぷゴシック}
+{\Sushiki 数式フォント}
+{\PixelMplus ピクセル・エムプラス}
+{\bf\PixelMplus ピクセル・エムプラス}
+{\Gabriola Gabriola}
+{\Noteworthy Noteworthy}
+{\Papyrus Papyrus}
+{\SnellRoundhand Snell Roundhand}
+{\Stencil Stencil}
+\end{lstlisting}
+
+
+\end{multicols}
+\fi
 
 \newpage
 \section{証明・定理環境}

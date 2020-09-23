@@ -1,6 +1,7 @@
 # nylecnote
 
 LaTeX package for taking lecture notes.
+Compatible with XeLaTeX and (u)pLaTeX + dvipdfmx.
 
 - [manual.pdf](https://github.com/nozomu-y/nylecnote/blob/master/manual.pdf)
 
@@ -23,6 +24,7 @@ All of these packages are contained in TeX Live.
 - atbegshi
 - graphix
 - hyperref
+- ifxetex
 - listings
 - mathtools
 - pxjahyper
@@ -34,6 +36,12 @@ All of these packages are contained in TeX Live.
 - titletoc
 - varwidth
 - xcolor-material
+
+#### XeLaTeX
+
+- fontspec
+- xeCJK
+- zxjatype
 
 ### Images
 
